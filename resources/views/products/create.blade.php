@@ -1,0 +1,77 @@
+@extends('layouts.vertical', ['title' => 'Products Rex ERP', 'sub_title' => 'Products', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
+
+@section('css')
+    @vite(['node_modules/dropzone/dist/dropzone.css'])
+@endsection
+
+@section('content')
+    <div class="container">
+        <div class="grid lg:grid-cols-4 gap-6">
+            <div class="col-span-1 flex flex-col gap-6">
+                <div class="card p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="card-title">Add Images</h4>
+                        <div class="inline-flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700 w-9 h-9">
+                            <i class="mgc_add_line"></i>
+                        </div>
+                    </div>
+
+                    <form action="#" class="dropzone text-gray-700 dark:text-gray-300 h-52">
+                        <div class="fallback">
+                            <input name="file" type="file" multiple="multiple">
+                        </div>
+                        <div class="dz-message needsclick w-full h-full flex items-center justify-center">
+                            <i class="mgc_pic_2_line text-8xl"></i>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-3 space-y-6">
+                <div class="card p-6">
+                    <h2 class="mb-6">Create Product</h2>
+                    <form action="{{ route('products.store') }}" method="POST">
+                        @csrf
+
+                        @include('products._form')
+
+                        <div class="flex justify-end gap-3">
+                            <button type="button" class="inline-flex items-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none">
+                                Cancel
+                            </button>
+                            <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-500 focus:outline-none">
+                                Create Product
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('script')
+    @vite(['resources/js/pages/highlight.js','resources/js/pages/form-fileupload.js',])
+    <script>
+        document.getElementById('category_id').addEventListener('change', function() {
+            const categoryId = this.value;
+            if (!categoryId) {
+                document.getElementById('subcategory_id').innerHTML = '<option value="">Select Subcategory</option>';
+                return;
+            }
+
+            axios.get(`/categories/${categoryId}/subcategories`)
+                .then(function(response) {
+                    let subcategoryOptions = '<option value="">Select Subcategory</option>';
+                    for (const id in response.data) {
+                        subcategoryOptions += `<option value="${id}">${response.data[id]}</option>`;
+                    }
+                    document.getElementById('subcategory_id').innerHTML = subcategoryOptions;
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+
+@endsection
