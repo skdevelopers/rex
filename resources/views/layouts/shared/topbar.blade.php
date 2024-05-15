@@ -9,17 +9,17 @@
     </button>
 
     <!-- Topbar Brand Logo -->
-    <a href="{{ route('any', 'index') }}" class="logo-box">
+    <a href="{{ route('home') }}" class="logo-box">
         <!-- Light Brand Logo -->
         <div class="logo-light">
-            <img src="/images/logo-light.png" class="logo-lg h-6" alt="Light logo">
-            <img src="/images/logo-sm.png" class="logo-sm" alt="Small logo">
+            <img src="{{ asset('/images/logo-light.png') }}" class="logo-lg h-6" alt="Light logo">
+            <img src="{{ asset('/images/logo-sm.png') }}" class="logo-sm" alt="Small logo">
         </div>
 
         <!-- Dark Brand Logo -->
         <div class="logo-dark">
-            <img src="/images/logo-dark.png" class="logo-lg h-6" alt="Dark logo">
-            <img src="/images/logo-sm.png" class="logo-sm" alt="Small logo">
+            <img src="{{ asset('/images/logo-dark.png') }}" class="logo-lg h-6" alt="Dark logo">
+            <img src="{{ asset('/images/logo-sm.png') }}" class="logo-sm" alt="Small logo">
         </div>
     </a>
 
@@ -35,31 +35,31 @@
     <div class="relative">
         <button data-fc-type="dropdown" data-fc-placement="bottom-end" type="button" class="nav-link p-2 fc-dropdown">
             <span class="flex items-center justify-center h-6 w-6">
-                <img src="/images/flags/us.jpg" alt="user-image" class="h-4 w-6">
+                <img src="{{ asset('/images/flags/us.jpg') }}" alt="user-image" class="h-4 w-6">
             </span>
         </button>
         <div class="fc-dropdown fc-dropdown-open:opacity-100 hidden opacity-0 w-40 z-50 mt-2 transition-[margin,opacity] duration-300 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg p-2">
             <!-- item-->
             <a href="javascript:void(0);" class="flex items-center gap-2.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300">
-                <img src="/images/flags/germany.jpg" alt="user-image" class="h-4">
+                <img src="{{ asset('/images/flags/germany.jpg') }}" alt="user-image" class="h-4">
                 <span class="align-middle">German</span>
             </a>
 
             <!-- item-->
             <a href="javascript:void(0);" class="flex items-center gap-2.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300">
-                <img src="/images/flags/italy.jpg" alt="user-image" class="h-4">
+                <img src="{{ asset('/images/flags/italy.jpg') }}" alt="user-image" class="h-4">
                 <span class="align-middle">Italian</span>
             </a>
 
             <!-- item-->
             <a href="javascript:void(0);" class="flex items-center gap-2.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300">
-                <img src="/images/flags/spain.jpg" alt="user-image" class="h-4">
+                <img src="{{ asset('/images/flags/spain.jpg') }}" alt="user-image" class="h-4">
                 <span class="align-middle">Spanish</span>
             </a>
 
             <!-- item-->
             <a href="javascript:void(0);" class="flex items-center gap-2.5 py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300">
-                <img src="/images/flags/russia.jpg" alt="user-image" class="h-4">
+                <img src="{{ asset('/images/flags/russia.jpg') }}" alt="user-image" class="h-4">
                 <span class="align-middle">Russian</span>
             </a>
         </div>
@@ -134,7 +134,7 @@
                     <div class="card-body">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
-                                <img src="/images/users/avatar-2.jpg" class="rounded-full h-9 w-9" alt="">
+                                <img src="{{ asset('/images/users/avatar-2.jpg') }}" class="rounded-full h-9 w-9" alt="">
                             </div>
                             <div class="flex-grow truncate ms-2">
                                 <h5 class="text-sm font-semibold mb-1">Cristina Pride <small class="font-normal text-gray-500 ms-1">1 day ago</small></h5>
@@ -166,7 +166,7 @@
                     <div class="card-body">
                         <div class="flex items-center">
                             <div class="flex-shrink-0">
-                                <img src="/images/users/avatar-4.jpg" class="rounded-full h-9 w-9" alt="">
+                                <img src="{{ asset('/images/users/avatar-4.jpg') }}" class="rounded-full h-9 w-9" alt="">
                             </div>
                             <div class="flex-grow truncate ms-2">
                                 <h5 class="text-sm font-semibold mb-1">Karen Robinson</h5>
@@ -196,7 +196,7 @@
     <!-- Profile Dropdown Button -->
     <div class="relative">
         <button data-fc-type="dropdown" data-fc-placement="bottom-end" type="button" class="nav-link">
-            <img src="/images/users/user-6.jpg" alt="user-image" class="rounded-full h-10">
+            <img src="{{ asset('/images/users/user-6.jpg') }}" alt="user-image" class="rounded-full h-10">
         </button>
         <div class="fc-dropdown fc-dropdown-open:opacity-100 hidden opacity-0 w-44 z-50 transition-[margin,opacity] duration-300 mt-2 bg-white shadow-lg border rounded-lg p-2 border-gray-200 dark:border-gray-700 dark:bg-gray-800">
             <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="pages-gallery.html">
@@ -207,12 +207,12 @@
                 <i class="mgc_task_2_line  me-2"></i>
                 <span>Kanban</span>
             </a>
-            <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="{{ route('second', ['auth', 'login']) }}">
+            <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="{{ route('auth.login') }}">
                 <i class="mgc_lock_line  me-2"></i>
                 <span>Lock Screen</span>
             </a>
             <hr class="my-2 -mx-2 border-gray-200 dark:border-gray-700">
-            <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="{{ route('second', ['auth', 'login']) }}">
+            <a class="flex items-center py-2 px-3 rounded-md text-sm text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300" href="{{ route('auth.login') }}">
                 <i class="mgc_exit_line  me-2"></i>
                 <span>Log Out</span>
             </a>

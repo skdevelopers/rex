@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use App\Models\Account;
 use App\Models\Product;
-use App\Models\Sales;
+use App\Models\Sale;
 use App\Models\TransactionDetail;
 use Exception;
 
@@ -91,7 +91,7 @@ trait InventoryTransactionTrait
     {
         $totalAmount = $quantity * $unitPrice;
 
-        Sales::create([
+        Sale::create([
             'date' => now(),
             'party_name' => 'Customer Name',
             'product_id' => $product->id,

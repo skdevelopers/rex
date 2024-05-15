@@ -144,7 +144,7 @@
     <div class="offcanvas-footer border-top px-3 py-2 text-center">
         <div class="d-flex gap-2">
             <button type="button" class="btn btn-light w-50" id="reset-layout">Reset</button>
-            <a href="https://themeforest.net/item/konrix-tailwind-css-admin-dashboard-template/46001985?ref=coderthemes" class="btn btn-danger w-50" target="_blank"><i class="mdi mdi-basket me-1"></i> Buy</a>
+{{--            <a href="https://themeforest.net/item/konrix-tailwind-css-admin-dashboard-template/46001985?ref=skdevelopers" class="btn btn-danger w-50" target="_blank"><i class="mdi mdi-basket me-1"></i> Buy</a>--}}
         </div>
     </div>
 </div>

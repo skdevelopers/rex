@@ -3,11 +3,11 @@
 @section('content')
     <div class="grid grid-cols-12">
         <div class="mb-4">
-            <a href="{{ route('$permissions.create') }}" class="btn inline-flex justify-center items-center bg-primary text-white w-full fc-dropdown">
+            <a href="{{ route('permissions.create') }}" class="btn inline-flex justify-center items-center bg-primary text-white w-full ">
                 <i class="mgc_add_line text-lg me-2"></i> Create New
             </a>
         </div>
-
+    </div>
         <div class="col-span-12">
             <!-- Table to display permission records -->
             <div class="overflow-x-auto">
@@ -52,5 +52,5 @@
                 </table>
             </div>
         </div>
-    </div>
+
 @endsection

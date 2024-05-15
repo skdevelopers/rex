@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sales;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 
 class SalesController extends Controller
@@ -12,7 +12,8 @@ class SalesController extends Controller
      */
     public function index()
     {
-        //
+        $sales = Sale::all();
+        return view('sales.index', compact('sales'));
     }
 
     /**
@@ -20,7 +21,7 @@ class SalesController extends Controller
      */
     public function create()
     {
-        //
+        return view('sales.create');
     }
 
     /**
@@ -34,23 +35,25 @@ class SalesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Sales $sales)
+    public function show(Sale $sales)
     {
-        //
+        $sale = Sale::findOrFail($id);
+        return view('sales.show', compact('sale'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Sales $sales)
+    public function edit(Sale $sales)
     {
-        //
+
+        return view('sales.edit', compact('sales'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Sales $sales)
+    public function update(Request $request, Sale $sales)
     {
         //
     }
@@ -58,7 +61,7 @@ class SalesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Sales $sales)
+    public function destroy(Sale $sales)
     {
         //
     }

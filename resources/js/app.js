@@ -12,6 +12,7 @@ import feather from 'feather-icons';
 
 // Make Axios available globally (optional)
 window.axios = axios;
+axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 class App {
 

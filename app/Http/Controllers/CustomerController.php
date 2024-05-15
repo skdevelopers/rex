@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -10,12 +14,23 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): Factory|View|Application
     {
+        // Retrieve all customers
         $customers = Customer::all();
+        // Return customers data as JSON response
         return view('customers.index', compact('customers'));
     }
-
+    /**
+     * Display a listing of the resource.
+     */
+    public function indexJson(): JsonResponse
+    {
+        // Retrieve all customers
+        $customers = Customer::all();
+        // Return customers data as JSON response
+        return response()->json($customers);
+    }
     /**
      * Show the form for creating a new resource.
      */

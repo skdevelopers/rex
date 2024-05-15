@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -12,7 +13,17 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        //
+        $suppliers = Supplier::all();
+        return view('suppliers.index', compact('suppliers'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function indexJson(Request $request): JsonResponse
+    {
+        $suppliers = Supplier::select('id', 'name')->get();
+        return response()->json($suppliers);
     }
 
     /**
@@ -20,7 +31,7 @@ class SupplierController extends Controller
      */
     public function create()
     {
-        //
+        return view('suppliers.create');
     }
 
     /**
@@ -28,7 +39,17 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:suppliers',
+            'phone' => 'required',
+            'address' => 'required',
+        ]);
+
+        Supplier::create($request->all());
+
+        return redirect()->route('suppliers.index')
+            ->with('success', 'Supplier created successfully.');
     }
 
     /**
