@@ -1,8 +1,8 @@
 /*
-Template Name: Konrix - Responsive 5 Admin Dashboard
-Author: CoderThemes
-Website: https://coderthemes.com/
-Contact: support@coderthemes.com
+Template Name: Rex - Responsive ERP Dashboard
+Author: MianSalman
+Website: https://skdeveloperz.com/
+Contact: support@skdeveloperz.com
 File: Dashboard js
 */
 

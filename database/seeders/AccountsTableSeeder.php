@@ -33,7 +33,7 @@ class AccountsTableSeeder extends Seeder
             ['account_number' => '3001001', 'name' => 'Share Capital', 'group' => 'Equity', 'chart_of_account_id' => 7, 'parent_id' => null, 'enabled' => 1],
             ['account_number' => '3002001', 'name' => 'Accumulated Profit', 'group' => 'Reserves', 'chart_of_account_id' => 8, 'parent_id' => null, 'enabled' => 1],
             ['account_number' => '3001002', 'name' => 'Owner Investment', 'group' => 'Equity', 'chart_of_account_id' => 7, 'parent_id' => null, 'enabled' => 1],
-            ['account_number' => '4001001', 'name' => 'Sales - Local', 'group' => 'Sales & Service', 'chart_of_account_id' => 13, 'parent_id' => null, 'enabled' => 1],
+            ['account_number' => '4001001', 'name' => 'Sale - Local', 'group' => 'Sale & Service', 'chart_of_account_id' => 13, 'parent_id' => null, 'enabled' => 1],
             ['account_number' => '5001001', 'name' => 'Stock 1 Consumed', 'group' => 'Operating Expenses', 'chart_of_account_id' => 15, 'parent_id' => null, 'enabled' => 1],
             ['account_number' => '5001002', 'name' => 'Salaries & Wages', 'group' => 'Operating Expenses', 'chart_of_account_id' => 15, 'parent_id' => null, 'enabled' => 1],
             ['account_number' => '5001003', 'name' => 'Repair & Maintenance', 'group' => 'Operating Expenses', 'chart_of_account_id' => 15, 'parent_id' => null, 'enabled' => 1],

@@ -42,10 +42,10 @@
                             </div>
                             <div class="flex">
                                 <a href="javascript:void(0);">
-                                    <img src="/images/users/avatar-1.jpg" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
+                                    <img src="{{ asset('images/users/avatar-1') }}" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
                                 </a>
                                 <a href="javascript:void(0);" class="-ms-2">
-                                    <img src="/images/users/avatar-2.jpg" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
+                                    <img src="{{ asset('images/users/avatar-2') }}" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend" >
                                 </a>
                             </div>
                         </div>
@@ -88,10 +88,10 @@
                             </div>
                             <div class="flex">
                                 <a href="javascript:void(0);">
-                                    <img src="/images/users/avatar-3.jpg" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
+                                    <img src="{{ asset('/images/users/avatar-3.jpg') }}" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
                                 </a>
                                 <a href="javascript:void(0);" class="-ms-2">
-                                    <img src="/images/users/avatar-4.jpg" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
+                                    <img src="{{ asset('/images/users/avatar-4.jpg') }}" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
                                 </a>
                             </div>
                         </div>
@@ -134,10 +134,10 @@
                             </div>
                             <div class="flex">
                                 <a href="javascript:void(0);">
-                                    <img src="/images/users/avatar-5.jpg" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
+                                    <img src="{{ asset('/images/users/avatar-5') }}" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
                                 </a>
                                 <a href="javascript:void(0);" class="-ms-2">
-                                    <img src="/images/users/avatar-6.jpg" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
+                                    <img src="{{ asset('/images/users/avatar-6.jpg') }}" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
                                 </a>
                             </div>
                         </div>
@@ -180,10 +180,10 @@
                             </div>
                             <div class="flex">
                                 <a href="javascript:void(0);">
-                                    <img src="/images/users/avatar-7.jpg" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
+                                    <img src="{{ asset('images/users/avatar-7') }}" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
                                 </a>
                                 <a href="javascript:void(0);" class="-ms-2">
-                                    <img src="/images/users/avatar-8.jpg" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
+                                    <img src="{{ asset('images/users/avatar-8') }}" class="rounded-full h-8 w-8 border-2 border-gray-300 dark:border-gray-700" alt="friend">
                                 </a>
                             </div>
                         </div>
@@ -713,7 +713,7 @@
                     <div class="px-6" data-simplebar style="max-height: 304px;">
                         <div class="space-y-6">
                             <div class="flex items-center">
-                                <img class="me-3 rounded-full" src="/images/users/avatar-1.jpg" width="40" alt="Generic placeholder image">
+                                <img class="me-3 rounded-full" src="{{ asset('images/users/avatar-1') }}" width="40" alt="Generic placeholder image">
                                 <div class="w-full overflow-hidden">
                                     <h5 class="font-semibold"><a href="javascript:void(0);" class="text-gray-600 dark:text-gray-400">Risa Pearson</a></h5>
                                     <div class="flex items-center gap-2">
@@ -725,7 +725,7 @@
                             </div>
 
                             <div class="flex items-center">
-                                <img class="me-3 rounded-full" src="/images/users/avatar-2.jpg" width="40" alt="Generic placeholder image">
+                                <img class="me-3 rounded-full" src="{{ asset('images/users/avatar-2') }}" width="40" alt="Generic placeholder image">
                                 <div class="w-full overflow-hidden">
                                     <h5 class="font-semibold"><a href="javascript:void(0);" class="text-gray-600 dark:text-gray-400">Margaret D. Evans</a></h5>
                                     <div class="flex items-center gap-2">
@@ -737,7 +737,7 @@
                             </div>
 
                             <div class="flex items-center">
-                                <img class="me-3 rounded-full" src="/images/users/avatar-3.jpg" width="40" alt="Generic placeholder image">
+                                <img class="me-3 rounded-full" src="{{ asset('images/users/avatar-3') }}" width="40" alt="Generic placeholder image">
                                 <div class="w-full overflow-hidden">
                                     <h5 class="font-semibold"><a href="javascript:void(0);" class="text-gray-600 dark:text-gray-400">Bryan J. Luellen</a></h5>
                                     <div class="flex items-center gap-2">
@@ -749,7 +749,7 @@
                             </div>
 
                             <div class="flex items-center">
-                                <img class="me-3 rounded-full" src="/images/users/avatar-4.jpg" width="40" alt="Generic placeholder image">
+                                <img class="me-3 rounded-full" src="{{ asset('images/users/avatar-4') }}" width="40" alt="Generic placeholder image">
                                 <div class="w-full overflow-hidden">
                                     <h5 class="font-semibold"><a href="javascript:void(0);" class="text-gray-600 dark:text-gray-400">Kathryn S. Collier</a></h5>
                                     <div class="flex items-center gap-2">
@@ -761,7 +761,7 @@
                             </div>
 
                             <div class="flex items-center">
-                                <img class="me-3 rounded-full" src="/images/users/avatar-5.jpg" width="40" alt="Generic placeholder image">
+                                <img class="me-3 rounded-full" src="{{ asset('images/users/avatar-5') }}" width="40" alt="Generic placeholder image">
                                 <div class="w-full overflow-hidden">
                                     <h5 class="font-semibold"><a href="javascript:void(0);" class="text-gray-600 dark:text-gray-400">Timothy Kauper</a></h5>
                                     <div class="flex items-center gap-2">
@@ -773,7 +773,7 @@
                             </div>
 
                             <div class="flex items-center">
-                                <img class="me-3 rounded-full" src="/images/users/avatar-6.jpg" width="40" alt="Generic placeholder image">
+                                <img class="me-3 rounded-full" src="{{ asset('images/users/avatar-6') }}" width="40" alt="Generic placeholder image">
                                 <div class="w-full overflow-hidden">
                                     <h5 class="font-semibold"><a href="javascript:void(0);" class="text-gray-600 dark:text-gray-400">Zara Raws</a></h5>
                                     <div class="flex items-center gap-2">

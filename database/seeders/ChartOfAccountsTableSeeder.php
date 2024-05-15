@@ -26,7 +26,7 @@ class ChartOfAccountsTableSeeder extends Seeder
             ['group_id' => 2, 'parent_id' => null, 'name' => 'Short Term Loans'],
             ['group_id' => 2, 'parent_id' => null, 'name' => 'Advances, Deposits & Other Liabilities'],
             ['group_id' => 2, 'parent_id' => null, 'name' => 'Accounts Payable'],
-            ['group_id' => 4, 'parent_id' => null, 'name' => 'Sales & Service'],
+            ['group_id' => 4, 'parent_id' => null, 'name' => 'Sale & Service'],
             ['group_id' => 4, 'parent_id' => null, 'name' => 'Other Income'],
             ['group_id' => 5, 'parent_id' => null, 'name' => 'Operating Expenses'],
             ['group_id' => 5, 'parent_id' => null, 'name' => 'Administrative Expenses'],

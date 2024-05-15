@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchase_bills', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('cash_flows', function (Blueprint $table) {
+            $table->date('dated')->default(now())->after('id');
+
         });
     }
 
@@ -22,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchase_bills');
+        Schema::table('cash_flows', function (Blueprint $table) {
+            $table->dropColumn('dated');
+        });
     }
 };
