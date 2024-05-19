@@ -22,7 +22,7 @@ class SupplierController extends Controller
      */
     public function indexJson(Request $request): JsonResponse
     {
-        $suppliers = Supplier::select('id', 'name')->get();
+        $suppliers = Supplier::all();
         return response()->json($suppliers);
     }
 
