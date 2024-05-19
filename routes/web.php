@@ -24,6 +24,7 @@ use App\Http\Controllers\PermissionController;
 
 require __DIR__ . '/auth.php';
 
+    Route::get('/', fn() => redirect('/login'));
     Route::get('/home', fn() => view('index'))->name('home');
     Route::get('/charts', fn() => view('charts'))->name('charts');
     Route::get('/apps/calendar', fn() => view('apps.calender'))->name('apps.calendar');

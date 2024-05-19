@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\CashFlow;
+use App\Traits\GeneralLedgerTrait;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class CashFlowController extends Controller
 {
+    use GeneralLedgerTrait;
     /**
      * Display a listing of the resource.
      */
@@ -42,25 +46,55 @@ class CashFlowController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     * @throws Exception
      */
     public function store(Request $request)
     {
-        // Validate incoming request data
         $validatedData = $request->validate([
             'dated' => 'required|date',
-            'customer_id' => 'nullable|exists:customers,id',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'customer_id' => 'required_if:cash_receipts,>,0|nullable|exists:customers,id',
+            'supplier_id' => 'required_if:cash_disbursements,>,0|nullable|exists:suppliers,id',
             'sale_id' => 'nullable|exists:sales,id',
             'purchase_id' => 'nullable|exists:purchases,id',
-            'cash_receipts' => 'required|numeric',
-            'cash_disbursements' => 'required|numeric',
-            // Add other validation rules as needed
+            'cash_receipts' => 'required_without:cash_disbursements|nullable|numeric|min:0',
+            'cash_disbursements' => 'required_without:cash_receipts|nullable|numeric|min:0',
+        ], [
+            'customer_id.required_if' => 'Customer is required when cash receipts are provided.',
+            'supplier_id.required_if' => 'Supplier is required when cash disbursements are provided.',
+            'cash_receipts.required_without' => 'Cash receipts are required if cash disbursements are not provided.',
+            'cash_disbursements.required_without' => 'Cash disbursements are required if cash receipts are not provided.',
         ]);
 
-        // Create a new cash flow record
         $cashFlow = CashFlow::create($validatedData);
 
-        // Redirect to the index route or show view with success message
+        $cashReceiptsAccount = Account::where('name', 'Cash at Bank')->first()->id;
+        $cashDisbursementsAccount = Account::where('name', 'Cash in Hand')->first()->id;
+
+        $details = [];
+
+        if ($cashFlow->cash_receipts > 0) {
+            $details[] = [
+                'entryable_id' => $cashFlow->id,
+                'entryable_type' => CashFlow::class,
+                'account_id' => $cashReceiptsAccount,
+                'type' => 'debit',
+                'total_amount' => $cashFlow->cash_receipts,
+            ];
+        }
+
+        if ($cashFlow->cash_disbursements > 0) {
+            $details[] = [
+                'entryable_id' => $cashFlow->id,
+                'entryable_type' => CashFlow::class,
+                'account_id' => $cashDisbursementsAccount,
+                'type' => 'credit',
+                'total_amount' => $cashFlow->cash_disbursements,
+            ];
+        }
+
+        $user = auth()->user();
+        $this->generateGL('Cash Flow Transaction', $details, 'Cash Flow Reference', 'cash_flow', $user);
+
         return redirect()->route('cash-flows.index')->with('success', 'Cash Flow created successfully.');
     }
 
@@ -87,25 +121,50 @@ class CashFlowController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws Exception
      */
     public function update(Request $request, CashFlow $cashFlow)
     {
-        // Validate incoming request data
         $validatedData = $request->validate([
             'dated' => 'required|date',
-            'customer_id' => 'nullable|exists:customers,id',
-            'supplier_id' => 'nullable|exists:suppliers,id',
+            'customer_id' => 'required_if:cash_receipts,>,0|nullable|exists:customers,id',
+            'supplier_id' => 'required_if:cash_disbursements,>,0|nullable|exists:suppliers,id',
             'sale_id' => 'nullable|exists:sales,id',
             'purchase_id' => 'nullable|exists:purchases,id',
-            'cash_receipts' => 'required|numeric',
-            'cash_disbursements' => 'required|numeric',
-            // Add other validation rules as needed
+            'cash_receipts' => 'required_without:cash_disbursements|nullable|numeric|min:0',
+            'cash_disbursements' => 'required_without:cash_receipts|nullable|numeric|min:0',
+        ], [
+            'customer_id.required_if' => 'Customer is required when cash receipts are provided.',
+            'supplier_id.required_if' => 'Supplier is required when cash disbursements are provided.',
+            'cash_receipts.required_without' => 'Cash receipts are required if cash disbursements are not provided.',
+            'cash_disbursements.required_without' => 'Cash disbursements are required if cash receipts are not provided.',
         ]);
 
-        // Update the cash flow record with validated data
         $cashFlow->update($validatedData);
 
-        // Redirect to the show view with success message
+        $cashReceiptsAccount = Account::where('name', 'Cash at Bank')->first()->id;
+        $cashDisbursementsAccount = Account::where('name', 'Cash in Hand')->first()->id;
+
+        $details = [
+            [
+                'entryable_id' => $cashFlow->id,
+                'entryable_type' => CashFlow::class,
+                'account_id' => $cashReceiptsAccount,
+                'type' => 'debit',
+                'total_amount' => $cashFlow->cash_receipts,
+            ],
+            [
+                'entryable_id' => $cashFlow->id,
+                'entryable_type' => CashFlow::class,
+                'account_id' => $cashDisbursementsAccount,
+                'type' => 'credit',
+                'total_amount' => $cashFlow->cash_disbursements,
+            ],
+        ];
+
+        $user = auth()->user();
+        $this->generateGL('Cash Flow Update', $details, 'Cash Flow Update Reference', 'cash_flow', $user);
+
         return redirect()->route('cash-flows.show', $cashFlow->id)->with('success', 'Cash Flow updated successfully.');
     }
 

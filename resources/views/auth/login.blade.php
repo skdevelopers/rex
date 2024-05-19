@@ -36,7 +36,7 @@
                             <label class="block text-sm font-medium text-gray-600 dark:text-gray-200 mb-2"
                                    for="loggingPassword">Password</label>
                             <input id="loggingPassword" class="form-input" type="password"
-                                   placeholder="Enter your password" value="password" name="password">
+                                   placeholder="Enter your password" value="Password" name="password">
                         </div>
 
                         <div class="flex items-center justify-between mb-4">

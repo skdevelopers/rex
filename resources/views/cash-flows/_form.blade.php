@@ -8,35 +8,28 @@
     <input type="text" name="cash_disbursements" id="cash_disbursements" value="{{ old('cash_disbursements', $cashFlow->cash_disbursements ?? '') }}" class="form-input" required>
 </div>
 
-<!-- HTML form with dropdowns for customer and supplier -->
 <div>
     <label for="customer_id" class="text-gray-800 text-sm font-medium inline-block mb-2">Customer:</label>
-    <select name="customer_id" id="customer_id" class="form-select" required>
+    <select name="customer_id" id="customer_id" class="form-select">
         <option value="">Select Customer</option>
     </select>
 </div>
 
 <div>
     <label for="supplier_id" class="text-gray-800 text-sm font-medium inline-block mb-2">Supplier:</label>
-    <select name="supplier_id" id="supplier_id" class="form-select" required>
+    <select name="supplier_id" id="supplier_id" class="form-select">
         <option value="">Select Supplier</option>
     </select>
 </div>
 
-<!-- Add more fields as needed -->
-
 @push('script')
-    <!-- Script to fetch customers and suppliers data -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            console.log('DOM Content Loaded'); // Check if this message appears in the console
+            console.log('DOM Content Loaded');
 
-            // Fetch customers and suppliers data using Axios
             axios.get('/api/customers')
                 .then(response => {
                     const customers = response.data;
-
-                    // Populate customer dropdown
                     const customerDropdown = document.getElementById('customer_id');
                     customerDropdown.innerHTML = '<option value="">Select Customer</option>';
                     customers.forEach(customer => {
@@ -51,8 +44,6 @@
             axios.get('/api/suppliers')
                 .then(response => {
                     const suppliers = response.data;
-
-                    // Populate supplier dropdown
                     const supplierDropdown = document.getElementById('supplier_id');
                     supplierDropdown.innerHTML = '<option value="">Select Supplier</option>';
                     suppliers.forEach(supplier => {
@@ -63,6 +54,24 @@
                 .catch(error => {
                     console.error('Error fetching suppliers:', error);
                 });
+        });
+
+        document.getElementById('cash_receipts').addEventListener('input', function () {
+            const customerField = document.getElementById('customer_id');
+            if (this.value > 0) {
+                customerField.setAttribute('required', 'required');
+            } else {
+                customerField.removeAttribute('required');
+            }
+        });
+
+        document.getElementById('cash_disbursements').addEventListener('input', function () {
+            const supplierField = document.getElementById('supplier_id');
+            if (this.value > 0) {
+                supplierField.setAttribute('required', 'required');
+            } else {
+                supplierField.removeAttribute('required');
+            }
         });
     </script>
 @endpush
