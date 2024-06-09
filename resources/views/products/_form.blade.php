@@ -1,3 +1,4 @@
+<!-- resources/views/products/form.blade.php -->
 <div class="card p-6">
     <div class="form-group">
         <label for="name" class="mb-2 block">Name:</label>
@@ -6,8 +7,7 @@
 
     <div class="form-group">
         <label for="description" class="mb-2 block">Description:</label>
-        <textarea name="description" id="description" class="form-input"
-                  required>{{ $product->description ?? '' }}</textarea>
+        <textarea name="description" id="description" class="form-input" required>{{ $product->description ?? '' }}</textarea>
     </div>
 
     <div class="form-group">
@@ -16,18 +16,21 @@
             <option value="">Select Category</option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}"
-                        @if(isset($product) && $product->category_id == $category->id) selected @endif>{{ $category->name }}</option>
+                        @if(isset($product) && $product->category_id == $category->id) selected @endif>
+                    {{ $category->name }}
+                </option>
                 @if ($category->children->count() > 0)
                     @foreach ($category->children as $subcategory)
                         <option value="{{ $subcategory->id }}"
-                                @if(isset($product) && $product->subcategory_id == $subcategory->id) selected @endif>
-                            &nbsp;&nbsp;&nbsp;{{ $subcategory->name }}</option>
+                                @if(isset($product) && $product->category_id == $subcategory->id) selected @endif>
+                            &nbsp;&nbsp;&nbsp;{{ $subcategory->name }}
+                        </option>
                         @if ($subcategory->children->count() > 0)
-                            {{-- Check if sub-subcategories exist --}}
                             @foreach ($subcategory->children as $subSubcategory)
                                 <option value="{{ $subSubcategory->id }}"
-                                        @if(isset($product) && $product->subcategory_id == $subSubcategory->id) selected @endif>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $subSubcategory->name }}</option>
+                                        @if(isset($product) && $product->category_id == $subSubcategory->id) selected @endif>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $subSubcategory->name }}
+                                </option>
                             @endforeach
                         @endif
                     @endforeach
@@ -35,26 +38,24 @@
             @endforeach
         </select>
     </div>
+
     <div class="form-group">
         <label for="subcategory_id" class="mb-2 block">Subcategory:</label>
         <select name="subcategory_id" id="subcategory_id" class="form-select" required>
             <option value="">Select Subcategory</option>
-
         </select>
     </div>
+
     <div class="form-group">
-        <label for="attributes" class="mb-2 block">Attributes:</label>
-        <select name="attributes[]" id="attributes" class="form-select" multiple>
-            @foreach($attributes as $attribute)
-                <option value="{{ $attribute->id }}">{{ $attribute->name }}</option>
-            @endforeach
+        <label for="sub_subcategory_id" class="mb-2 block">Sub-Subcategory:</label>
+        <select name="sub_subcategory_id" id="sub_subcategory_id" class="form-select" required>
+            <option value="">Select Sub-Subcategory</option>
         </select>
     </div>
 
     <div class="form-group">
         <label for="quantity" class="mb-2 block">Quantity:</label>
-        <input type="number" name="quantity" id="quantity" class="form-input" value="{{ $product->quantity ?? '' }}"
-               required>
+        <input type="number" name="quantity" id="quantity" class="form-input" value="{{ $product->quantity ?? '' }}" required>
     </div>
 
     <div class="form-group">
@@ -64,31 +65,41 @@
 
     <div class="form-group">
         <label for="unit_price" class="mb-2 block">Unit Price:</label>
-        <input type="text" name="unit_price" id="unit_price" class="form-input" value="{{ $product->unit_price ?? '' }}"
-               required>
+        <input type="text" name="unit_price" id="unit_price" class="form-input" value="{{ $product->unit_price ?? '' }}" required>
     </div>
 </div>
 
-@push('script')
+@push('scripts')
     <script>
         document.getElementById('category_id').addEventListener('change', function() {
             const categoryId = this.value;
-            if (!categoryId) {
-                document.getElementById('subcategory_id').innerHTML = '<option value="">Select Subcategory</option>';
+            loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
+            document.getElementById('sub_subcategory_id').innerHTML = '<option value="">Select Sub-Subcategory</option>';
+        });
+
+        document.getElementById('subcategory_id').addEventListener('change', function() {
+            const subcategoryId = this.value;
+            loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
+        });
+
+        function loadSubcategories(parentId, elementId, placeholder) {
+            const targetElement = document.getElementById(elementId);
+            if (!parentId) {
+                targetElement.innerHTML = `<option value="">${placeholder}</option>`;
                 return;
             }
 
-            axios.get(`/categories/${categoryId}/subcategories`)
-                .then(function(response) {
-                    let subcategoryOptions = '<option value="">Select Subcategory</option>';
-                    for (const id in response.data) {
-                        subcategoryOptions += `<option value="${id}">${response.data[id]}</option>`;
-                    }
-                    document.getElementById('subcategory_id').innerHTML = subcategoryOptions;
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                });
-        });
+            axios.get(`/categories/${parentId}/subcategories`)
+                    .then(function(response) {
+                        let options = `<option value="">${placeholder}</option>`;
+                        response.data.forEach(subcategory => {
+                            options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
+                        });
+                        targetElement.innerHTML = options;
+                    })
+                    .catch(function(error) {
+                        console.error('Error:', error);
+                    });
+        }
     </script>
 @endpush
