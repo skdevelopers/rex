@@ -79,28 +79,28 @@
             }
 
             axios.get(`/categories/${categoryId}/subcategories`)
-                .then(response => {
-                    const subcategories = response.data;
-                    subcategoriesList.innerHTML = '';
+                    .then(response => {
+                        const subcategories = response.data;
+                        subcategoriesList.innerHTML = '';
 
-                    if (subcategories.length > 0) {
-                        subcategories.forEach(subcategory => {
-                            const li = document.createElement('li');
-                            li.innerHTML = `${subcategory.name} <button onclick="toggleSubcategories(${subcategory.id})" class="text-blue-500 hover:text-blue-700 mx-0.5">
+                        if (subcategories.length > 0) {
+                            subcategories.forEach(subcategory => {
+                                const li = document.createElement('li');
+                                li.innerHTML = `${subcategory.name} <button onclick="toggleSubcategories(${subcategory.id})" class="text-blue-500 hover:text-blue-700 mx-0.5">
                                     <i class="mgc_expand_line text-lg"></i> View Subcategories
                                 </button>
                                 <ul id="subcategories-${subcategory.id}" class="bg-gray-100 px-4 py-2 hidden"></ul>`;
-                            subcategoriesList.appendChild(li);
-                        });
-                    } else {
-                        subcategoriesList.innerHTML = '<li class="text-gray-500">No subcategories found.</li>';
-                    }
+                                subcategoriesList.appendChild(li);
+                            });
+                        } else {
+                            subcategoriesList.innerHTML = '<li class="text-gray-500">No subcategories found.</li>';
+                        }
 
-                    subcategoriesList.classList.remove('hidden');
-                })
-                .catch(error => {
-                    console.error('Error loading subcategories:', error);
-                });
+                        subcategoriesList.classList.remove('hidden');
+                    })
+                    .catch(error => {
+                        console.error('Error loading subcategories:', error);
+                    });
         }
     </script>
 @endpush
