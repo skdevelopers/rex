@@ -1,7 +1,7 @@
 @extends('layouts.vertical', ['title' => 'Products Rex ERP', 'sub_title' => 'Products', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
 
 @section('css')
-    @vite(['node_modules/dropzone/dist/dropzone.css'])
+   
 @endsection
 
 @section('content')
