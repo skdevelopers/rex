@@ -2,25 +2,28 @@
 
 namespace App\Traits;
 
-use App\Models\Account;
 use App\Models\Product;
 use App\Models\Sale;
-use App\Models\TransactionDetail;
+use App\Models\Account;
+use App\Models\User;
 use Exception;
 
 trait InventoryTransactionTrait
 {
+    use GeneralLedgerTrait;
+
     /**
      * Record inventory transaction (purchase or sale) in the General Ledger.
      *
      * @param Product $product
      * @param int $quantity
      * @param float $unitPrice
-     * @param string $transactionType  Transaction type ('purchase' or 'sale')
+     * @param string $transactionType Transaction type ('purchase' or 'sale')
+     * @param User $user
      * @return void
      * @throws Exception
      */
-    public function recordInventory(Product $product, int $quantity, float $unitPrice, string $transactionType)
+    public function recordInventoryTransaction(Product $product, int $quantity, float $unitPrice, string $transactionType, User $user)
     {
         $description = ($transactionType === 'purchase') ? "Inventory purchase: {$product->name}" : "Inventory sale: {$product->name}";
         $accountType = ($transactionType === 'purchase') ? 'debit' : 'credit';
@@ -31,17 +34,17 @@ trait InventoryTransactionTrait
                 'entryable_type' => Product::class,
                 'account_id' => $this->getAccountId('Stock-in-Trade'), // Inventory account ID
                 'type' => $accountType,
-                'amount' => $quantity,
+                'total_amount' => $unitPrice * $quantity,
             ],
         ];
 
-        $this->createTransaction($description, $details);
+        $this->generateGL($description, $details, 'Reference', $transactionType, $user);
 
         if ($transactionType === 'purchase') {
             $this->increaseInventory($product, $quantity, $unitPrice);
         } elseif ($transactionType === 'sale') {
             $this->decreaseInventory($product, $quantity);
-            $this->recordSaleTransaction($product, $quantity, $unitPrice);
+            $this->recordSaleTransaction($product, $quantity, $unitPrice, $user);
         }
     }
 
@@ -49,8 +52,8 @@ trait InventoryTransactionTrait
      * Increase inventory quantity for a purchase transaction.
      *
      * @param Product $product
-     * @param  int  $quantity
-     * @param  float  $unitPrice
+     * @param int $quantity
+     * @param float $unitPrice
      * @return void
      */
     protected function increaseInventory(Product $product, $quantity, $unitPrice)
@@ -85,9 +88,10 @@ trait InventoryTransactionTrait
      * @param Product $product
      * @param int $quantity
      * @param float $unitPrice
+     * @param User $user
      * @return void
      */
-    protected function recordSaleTransaction(Product $product, int $quantity, float $unitPrice)
+    protected function recordSaleTransaction(Product $product, int $quantity, float $unitPrice, User $user)
     {
         $totalAmount = $quantity * $unitPrice;
 
@@ -101,12 +105,32 @@ trait InventoryTransactionTrait
             'amount' => $totalAmount,
             'previous_balance' => 0.00,
         ]);
+
+        // Additional journal entry for sales revenue
+        $details = [
+            [
+                'entryable_id' => $product->id,
+                'entryable_type' => Product::class,
+                'account_id' => $this->getAccountId('Revenue'), // Revenue account ID
+                'type' => 'credit',
+                'total_amount' => $totalAmount,
+            ],
+            [
+                'entryable_id' => $product->id,
+                'entryable_type' => Product::class,
+                'account_id' => $this->getAccountId('Cost of Goods Sold'), // COGS account ID
+                'type' => 'debit',
+                'total_amount' => $unitPrice * $quantity,
+            ],
+        ];
+
+        $this->generateGL('Sale Transaction', $details, 'Sale Reference', 'sale', $user);
     }
 
     /**
      * Get the account ID based on account name or number.
      *
-     * @param  string  $accountNameOrNumber
+     * @param string $accountNameOrNumber
      * @return int|null
      */
     protected function getAccountId($accountNameOrNumber)
@@ -117,15 +141,4 @@ trait InventoryTransactionTrait
 
         return $account ? $account->id : null;
     }
-
-    /**
-     * Create a transaction in the General Ledger.
-     *
-     * @param  string  $description
-     * @param  array  $details
-     * @return void
-     * @throws Exception
-     */
-    abstract protected function createTransaction($description, $details);
 }
-
