@@ -39,10 +39,7 @@
         <label for="subcategory_id" class="mb-2 block">Subcategory:</label>
         <select name="subcategory_id" id="subcategory_id" class="form-select" required>
             <option value="">Select Subcategory</option>
-            @foreach ($subcategory->children as $subSubcategory)
-                <option value="{{ $subSubcategory->id }}"
-                        @if(isset($product) && $product->subcategory_id == $subSubcategory->id) selected @endif>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $subSubcategory->name }}</option>
-            @endforeach
+
         </select>
     </div>
     <div class="form-group">

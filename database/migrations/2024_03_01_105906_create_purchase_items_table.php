@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('purchase_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('purchase_bill_id');
+            $table->unsignedBigInteger('purchase_id');
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('purchase_bill_id')->references('id')->on('purchase_bills');
+            $table->foreign('purchase_id')->references('id')->on('purchases');
             $table->foreign('product_id')->references('id')->on('products');
         });
     }

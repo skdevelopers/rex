@@ -4,8 +4,8 @@ namespace App\Traits;
 
 use App\Models\Product;
 use App\Models\Sale;
-use App\Models\Transaction;
-use App\Models\TransactionDetail;
+use App\Models\JournalEntry;
+use App\Models\JournalEntryDetail;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -29,8 +29,8 @@ trait GeneralLedgerTrait
         DB::beginTransaction();
 
         try {
-            // Create a new transaction
-            $transaction = Transaction::create([
+            // Create a new journal entry
+            $journalEntry = JournalEntry::create([
                 'description' => $description,
                 'reference' => $reference,
                 'type' => $type,
@@ -38,10 +38,10 @@ trait GeneralLedgerTrait
                 'transaction_date' => now()->toDateString(),
             ]);
 
-            // Create transaction details
+            // Create journal entry details
             foreach ($details as $detail) {
-                TransactionDetail::create([
-                    'transaction_id' => $transaction->id,
+                JournalEntryDetail::create([
+                    'journal_entry_id' => $journalEntry->id,
                     'entryable_id' => $detail['entryable_id'],
                     'entryable_type' => $detail['entryable_type'],
                     'account_id' => $detail['account_id'],
@@ -92,9 +92,15 @@ trait GeneralLedgerTrait
                 'entryable_type' => Product::class,
                 'account_id' => $product->inventory_account_id, // Example: Inventory account ID
                 'type' => 'credit', // Decrease in inventory
-                'total_amount' => $product->unit_price * $product->quantity, // Monetary value of the inventory increase
+                'total_amount' => $product->unit_price * $quantity, // Monetary value of the inventory decrease
             ],
-            // Add more transaction details as needed
+            [
+                'entryable_id' => $product->id,
+                'entryable_type' => Product::class,
+                'account_id' => $product->revenue_account_id, // Example: Revenue account ID
+                'type' => 'debit', // Increase in revenue
+                'total_amount' => $totalAmount, // Total sales amount
+            ],
         ];
 
         // Generate general ledger entries for the sale transaction
