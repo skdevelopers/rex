@@ -1,7 +1,7 @@
 @extends('layouts.vertical', ['title' => 'Products Rex ERP', 'sub_title' => 'Products', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
 
 @section('css')
-    
+
 @endsection
 
 @section('content')
@@ -52,26 +52,4 @@
 
 @section('script')
     @vite(['resources/js/pages/highlight.js','resources/js/pages/form-fileupload.js',])
-    <script>
-        document.getElementById('category_id').addEventListener('change', function() {
-            const categoryId = this.value;
-            if (!categoryId) {
-                document.getElementById('subcategory_id').innerHTML = '<option value="">Select Subcategory</option>';
-                return;
-            }
-
-            axios.get(`/categories/${categoryId}/subcategories`)
-                .then(function(response) {
-                    let subcategoryOptions = '<option value="">Select Subcategory</option>';
-                    for (const id in response.data) {
-                        subcategoryOptions += `<option value="${id}">${response.data[id]}</option>`;
-                    }
-                    document.getElementById('subcategory_id').innerHTML = subcategoryOptions;
-                })
-                .catch(function(error) {
-                    console.error('Error:', error);
-                });
-        });
-    </script>
-
 @endsection

@@ -21,7 +21,6 @@ export default defineConfig({
                 'node_modules/quill/dist/quill.core.css',
                 'node_modules/quill/dist/quill.bubble.css',
                 'node_modules/quill/dist/quill.snow.css',
-                'node_modules/dropzone/dist/dropzone.css',
                 'node_modules/flatpickr/dist/flatpickr.min.css',
                 'node_modules/@simonwep/pickr/dist/themes/classic.min.css',
                 'node_modules/@simonwep/pickr/dist/themes/monolith.min.css',
@@ -31,7 +30,6 @@ export default defineConfig({
                 'node_modules/jsvectormap/dist/css/jsvectormap.min.css',
                 'node_modules/glightbox/dist/css/glightbox.min.css',
                 'node_modules/gridjs/dist/theme/mermaid.min.css',
-                'node_modules/dropzone/dist/dropzone.min.js',
 
                 // Theme Js
                 'resources/js/config.js',

@@ -5,7 +5,7 @@ namespace App\DTO;
 /**
  * Class SalesDTO
  *
- * Data Transfer Object (DTO) for the Sales model.
+ * Data Transfer Object (DTO) for the Sale model.
  *
  * @package App\DTO
  */

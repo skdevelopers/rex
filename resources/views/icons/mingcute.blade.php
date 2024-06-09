@@ -9,7 +9,7 @@
 			</h5>
 
 			<a href="https://www.mingcute.com/" target="_blank" class="btn-code">
-				<span class="me-2">Documentaion</span>
+				<span class="me-2">Documentation</span>
 				<i class="mgc_link_2_line text-sm"></i>
 			</a>
 		</div>

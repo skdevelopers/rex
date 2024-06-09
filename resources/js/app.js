@@ -12,6 +12,7 @@ import feather from 'feather-icons';
 
 // Make Axios available globally (optional)
 window.axios = axios;
+axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 class App {
 
@@ -416,4 +417,15 @@ class ThemeCustomizer {
 
 new App().init();
 new ThemeCustomizer().init();
+// Your Dropzone initialization code
+const dropzonePreviewNode = document.querySelector("#dropzone-preview-list");
+if (dropzonePreviewNode) {
+    const previewTemplate = dropzonePreviewNode.parentNode.innerHTML;
+    dropzonePreviewNode.parentNode.removeChild(dropzonePreviewNode);
 
+    const dropzone = new Dropzone(".dropzone", {
+        previewsContainer: "#dropzone-preview",
+        previewTemplate: previewTemplate,
+        // Add any other Dropzone options here
+    });
+}
