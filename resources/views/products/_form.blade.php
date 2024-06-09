@@ -1,4 +1,3 @@
-<!-- resources/views/products/form.blade.php -->
 <div class="card p-6">
     <div class="form-group">
         <label for="name" class="mb-2 block">Name:</label>
@@ -19,36 +18,20 @@
                         @if(isset($product) && $product->category_id == $category->id) selected @endif>
                     {{ $category->name }}
                 </option>
-                @if ($category->children->count() > 0)
-                    @foreach ($category->children as $subcategory)
-                        <option value="{{ $subcategory->id }}"
-                                @if(isset($product) && $product->category_id == $subcategory->id) selected @endif>
-                            &nbsp;&nbsp;&nbsp;{{ $subcategory->name }}
-                        </option>
-                        @if ($subcategory->children->count() > 0)
-                            @foreach ($subcategory->children as $subSubcategory)
-                                <option value="{{ $subSubcategory->id }}"
-                                        @if(isset($product) && $product->category_id == $subSubcategory->id) selected @endif>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ $subSubcategory->name }}
-                                </option>
-                            @endforeach
-                        @endif
-                    @endforeach
-                @endif
             @endforeach
         </select>
     </div>
 
     <div class="form-group">
         <label for="subcategory_id" class="mb-2 block">Subcategory:</label>
-        <select name="subcategory_id" id="subcategory_id" class="form-select" required>
+        <select name="subcategory_id" id="subcategory_id" class="form-select">
             <option value="">Select Subcategory</option>
         </select>
     </div>
 
     <div class="form-group">
         <label for="sub_subcategory_id" class="mb-2 block">Sub-Subcategory:</label>
-        <select name="sub_subcategory_id" id="sub_subcategory_id" class="form-select" required>
+        <select name="sub_subcategory_id" id="sub_subcategory_id" class="form-select">
             <option value="">Select Sub-Subcategory</option>
         </select>
     </div>
@@ -103,3 +86,4 @@
         }
     </script>
 @endpush
+
