@@ -88,7 +88,7 @@ class CategoryController extends Controller
      */
     public function getSubcategories(Category $category): JsonResponse
     {
-        $subcategories = $category->children()->pluck('name', 'id');
+        $subcategories = $category->children()->get(['id', 'name']);
         return response()->json($subcategories);
     }
 }

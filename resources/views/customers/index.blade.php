@@ -35,7 +35,7 @@
     </div>
 @endsection
 
-@push('script')
+@push('scripts')
     <!-- Script to fetch and populate customers data -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {

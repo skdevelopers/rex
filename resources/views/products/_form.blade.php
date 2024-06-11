@@ -14,8 +14,7 @@
         <select name="category_id" id="category_id" class="form-select" required>
             <option value="">Select Category</option>
             @foreach ($categories as $category)
-                <option value="{{ $category->id }}"
-                        @if(isset($product) && $product->category_id == $category->id) selected @endif>
+                <option value="{{ $category->id }}" @if(isset($product) && $product->category_id == $category->id) selected @endif>
                     {{ $category->name }}
                 </option>
             @endforeach
@@ -54,36 +53,58 @@
 
 @push('scripts')
     <script>
-        document.getElementById('category_id').addEventListener('change', function() {
-            const categoryId = this.value;
-            loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
-            document.getElementById('sub_subcategory_id').innerHTML = '<option value="">Select Sub-Subcategory</option>';
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('category_id');
+            const subcategorySelect = document.getElementById('subcategory_id');
+            const subSubcategorySelect = document.getElementById('sub_subcategory_id');
 
-        document.getElementById('subcategory_id').addEventListener('change', function() {
-            const subcategoryId = this.value;
-            loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
-        });
+            categorySelect.addEventListener('change', function() {
+                const categoryId = this.value;
+                loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
+                subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
+            });
 
-        function loadSubcategories(parentId, elementId, placeholder) {
-            const targetElement = document.getElementById(elementId);
-            if (!parentId) {
-                targetElement.innerHTML = `<option value="">${placeholder}</option>`;
-                return;
-            }
+            subcategorySelect.addEventListener('change', function() {
+                const subcategoryId = this.value;
+                loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
+            });
 
-            axios.get(`/categories/${parentId}/subcategories`)
-                    .then(function(response) {
-                        let options = `<option value="">${placeholder}</option>`;
-                        response.data.forEach(subcategory => {
-                            options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
+            function loadSubcategories(parentId, elementId, placeholder) {
+                const targetElement = document.getElementById(elementId);
+                if (!parentId) {
+                    targetElement.innerHTML = `<option value="">${placeholder}</option>`;
+                    return;
+                }
+
+                axios.get(`/categories/${parentId}/subcategories`)
+                        .then(function(response) {
+                            let options = `<option value="">${placeholder}</option>`;
+                            if (response.data.length > 0) {
+                                response.data.forEach(subcategory => {
+                                    options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
+                                });
+                            } else {
+                                options += '<option value="">N/A</option>';
+                                options += '<option value="create"><a href="/subcategories/create">Create new subcategory</a></option>';
+                            }
+                            targetElement.innerHTML = options;
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading subcategories:', error);
                         });
-                        targetElement.innerHTML = options;
-                    })
-                    .catch(function(error) {
-                        console.error('Error:', error);
-                    });
-        }
+                axios.get(`/categories/${parentId}/subcategories`)
+                        .then(function(response) {
+                            console.log(response.data); // Add this line to log the response data
+                            // ... rest of the code
+                        })
+                        .catch(function(error) {
+                            console.error('Error loading subcategories:', error);
+                        });
+
+            }
+        });
     </script>
 @endpush
+
+
 

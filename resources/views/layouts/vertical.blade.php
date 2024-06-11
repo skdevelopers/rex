@@ -6,7 +6,7 @@
     @include('layouts.shared/title-meta', ['title' => $title])
     @yield('css')
     @include('layouts.shared/head-css')
-    @stack('style')
+    @stack('styles')
 </head>
 
 <body>
@@ -44,7 +44,7 @@
     <script>
         document.getElementById("year").innerHTML = (new Date().getFullYear());
     </script>
-    @stack('script')
+    @stack('scripts')
 </body>
 
 

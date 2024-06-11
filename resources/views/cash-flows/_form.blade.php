@@ -22,7 +22,7 @@
     </select>
 </div>
 
-@push('script')
+@push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             console.log('DOM Content Loaded');
