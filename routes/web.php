@@ -44,7 +44,8 @@ Route::resource('cash-flows', CashFlowController::class)->middleware('auth');
 Route::resource('products', ProductController::class)->middleware('auth');
 Route::resource('sales', SalesController::class)->middleware('auth');
 Route::resource('suppliers', SupplierController::class)->middleware('auth');
-
+Route::post('/upload', [App\Http\Controllers\UploadController::class, 'upload'])->name('upload');
+Route::delete('/delete-image/{imageName}', [App\Http\Controllers\UploadController::class, 'delete'])->name('delete-image');
 //// Define specific routes for data retrieval
 Route::prefix('/api/')->group(function () {
     Route::get('customers', [CustomerController::class, 'indexJson'])->name('api.customers.index');

@@ -16,7 +16,7 @@
                         </div>
                     </div>
 
-                    <form action="#" class="dropzone text-gray-700 dark:text-gray-300 h-52">
+                    <form action="{{ route('upload') }}" class="dropzone text-gray-700 dark:text-gray-300 h-52" id="my-dropzone">
                         <div class="fallback">
                             <input name="file" type="file" multiple="multiple">
                         </div>
@@ -24,7 +24,23 @@
                             <i class="mgc_pic_2_line text-8xl"></i>
                         </div>
                     </form>
+
+                    <div id="dropzone-preview" class="dropzone-previews"></div>
                 </div>
+                <!-- Hidden template for previews -->
+                <div id="dropzone-preview-list" class="hidden">
+                    <div class="dz-preview dz-file-preview">
+                        <div class="dz-image"><img data-dz-thumbnail /></div>
+                        <div class="dz-details">
+                            <div class="dz-size"><span data-dz-size></span></div>
+                            <div class="dz-filename"><span data-dz-name></span></div>
+                        </div>
+                        <div class="dz-delete"><i class="mgc_delete_2_line"></i></div> <!-- Added delete icon here -->
+                        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+                        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+                    </div>
+                </div>
+
             </div>
 
             <div class="lg:col-span-3 space-y-6">

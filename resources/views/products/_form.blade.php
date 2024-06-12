@@ -60,24 +60,29 @@
 
             categorySelect.addEventListener('change', function() {
                 const categoryId = this.value;
+                console.log('Category changed:', categoryId); // Debug log
                 loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
                 subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
             });
 
             subcategorySelect.addEventListener('change', function() {
                 const subcategoryId = this.value;
+                console.log('Subcategory changed:', subcategoryId); // Debug log
                 loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
             });
 
             function loadSubcategories(parentId, elementId, placeholder) {
+                console.log('Loading subcategories for parent ID:', parentId); // Debug log
                 const targetElement = document.getElementById(elementId);
                 if (!parentId) {
                     targetElement.innerHTML = `<option value="">${placeholder}</option>`;
+                    console.log('No parent ID provided, clearing subcategories.'); // Debug log
                     return;
                 }
 
                 axios.get(`/categories/${parentId}/subcategories`)
                         .then(function(response) {
+                            console.log('Subcategories loaded:', response.data); // Debug log
                             let options = `<option value="">${placeholder}</option>`;
                             if (response.data.length > 0) {
                                 response.data.forEach(subcategory => {
@@ -90,17 +95,8 @@
                             targetElement.innerHTML = options;
                         })
                         .catch(function(error) {
-                            console.error('Error loading subcategories:', error);
+                            console.error('Error loading subcategories:', error); // Debug log
                         });
-                axios.get(`/categories/${parentId}/subcategories`)
-                        .then(function(response) {
-                            console.log(response.data); // Add this line to log the response data
-                            // ... rest of the code
-                        })
-                        .catch(function(error) {
-                            console.error('Error loading subcategories:', error);
-                        });
-
             }
         });
     </script>

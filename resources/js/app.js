@@ -3,7 +3,8 @@
  * Author: Mian Salman - Software Engineer
 * Module/App: App js
 */
-
+import Dropzone from 'dropzone';
+import 'dropzone/dist/dropzone.css';
 import axios from "axios";
 
 import "@frostui/tailwindcss"
@@ -417,15 +418,4 @@ class ThemeCustomizer {
 
 new App().init();
 new ThemeCustomizer().init();
-// Your Dropzone initialization code
-const dropzonePreviewNode = document.querySelector("#dropzone-preview-list");
-if (dropzonePreviewNode) {
-    const previewTemplate = dropzonePreviewNode.parentNode.innerHTML;
-    dropzonePreviewNode.parentNode.removeChild(dropzonePreviewNode);
 
-    const dropzone = new Dropzone(".dropzone", {
-        previewsContainer: "#dropzone-preview",
-        previewTemplate: previewTemplate,
-        // Add any other Dropzone options here
-    });
-}
