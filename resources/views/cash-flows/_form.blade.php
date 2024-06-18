@@ -77,7 +77,10 @@
         });
 
         // Handle form submission to ensure fields are set to 0 if not selected
-        document.querySelector('form').addEventListener('submit', function () {
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent default form submission behavior
+
+            // Set default values if fields are empty
             if (document.getElementById('cash_receipts').value === '') {
                 document.getElementById('cash_receipts').value = '0';
             }
@@ -90,6 +93,10 @@
             if (document.getElementById('supplier_id').value === '') {
                 document.getElementById('supplier_id').value = '0';
             }
+
+            // Submit the form
+            this.submit();
         });
+
     </script>
 @endpush

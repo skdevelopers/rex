@@ -50,24 +50,7 @@ class CashFlowController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'dated' => 'required|date',
-            'customer_id' => 'required_if:cash_receipts,>,0|nullable|exists:customers,id',
-            'supplier_id' => 'required_if:cash_disbursements,>,0|nullable|exists:suppliers,id',
-            'sale_id' => 'nullable|exists:sales,id',
-            'purchase_id' => 'nullable|exists:purchases,id',
-            'cash_receipts' => 'required_without:cash_disbursements|nullable|numeric|min:0',
-            'cash_disbursements' => 'required_without:cash_receipts|nullable|numeric|min:0',
-        ], [
-            'customer_id.required_if' => 'Customer is required when cash receipts are provided.',
-            'supplier_id.required_if' => 'Supplier is required when cash disbursements are provided.',
-            'cash_receipts.required_without' => 'Cash receipts are required if cash disbursements are not provided.',
-            'cash_disbursements.required_without' => 'Cash disbursements are required if cash receipts are not provided.',
-        ]);
-
-        // Set default values to 0 if fields are empty
-        $validatedData['cash_receipts'] = $validatedData['cash_receipts'] ?? 0;
-        $validatedData['cash_disbursements'] = $validatedData['cash_disbursements'] ?? 0;
+        $validatedData = $this->getArr($request);
 
         $cashFlow = CashFlow::create($validatedData);
 
@@ -129,24 +112,7 @@ class CashFlowController extends Controller
      */
     public function update(Request $request, CashFlow $cashFlow)
     {
-        $validatedData = $request->validate([
-            'dated' => 'required|date',
-            'customer_id' => 'required_if:cash_receipts,>,0|nullable|exists:customers,id',
-            'supplier_id' => 'required_if:cash_disbursements,>,0|nullable|exists:suppliers,id',
-            'sale_id' => 'nullable|exists:sales,id',
-            'purchase_id' => 'nullable|exists:purchases,id',
-            'cash_receipts' => 'required_without:cash_disbursements|nullable|numeric|min:0',
-            'cash_disbursements' => 'required_without:cash_receipts|nullable|numeric|min:0',
-        ], [
-            'customer_id.required_if' => 'Customer is required when cash receipts are provided.',
-            'supplier_id.required_if' => 'Supplier is required when cash disbursements are provided.',
-            'cash_receipts.required_without' => 'Cash receipts are required if cash disbursements are not provided.',
-            'cash_disbursements.required_without' => 'Cash disbursements are required if cash receipts are not provided.',
-        ]);
-
-        // Set default values to 0 if fields are empty
-        $validatedData['cash_receipts'] = $validatedData['cash_receipts'] ?? 0;
-        $validatedData['cash_disbursements'] = $validatedData['cash_disbursements'] ?? 0;
+        $validatedData = $this->getArr($request);
 
         $cashFlow->update($validatedData);
 
@@ -186,5 +152,32 @@ class CashFlowController extends Controller
 
         // Redirect to the index route with success message
         return redirect()->route('cash-flows.index')->with('success', 'Cash Flow deleted successfully.');
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function getArr(Request $request): array
+    {
+        $validatedData = $request->validate([
+            'dated' => 'required|date',
+            'customer_id' => 'required_if:cash_receipts,>,0|nullable|exists:customers,id',
+            'supplier_id' => 'required_if:cash_disbursements,>,0|nullable|exists:suppliers,id',
+            'sale_id' => 'nullable|exists:sales,id',
+            'purchase_id' => 'nullable|exists:purchases,id',
+            'cash_receipts' => 'required_without:cash_disbursements|nullable|numeric|min:0',
+            'cash_disbursements' => 'required_without:cash_receipts|nullable|numeric|min:0',
+        ], [
+            'customer_id.required_if' => 'Customer is required when cash receipts are provided.',
+            'supplier_id.required_if' => 'Supplier is required when cash disbursements are provided.',
+            'cash_receipts.required_without' => 'Cash receipts are required if cash disbursements are not provided.',
+            'cash_disbursements.required_without' => 'Cash disbursements are required if cash receipts are not provided.',
+        ]);
+
+        // Set default values to 0 if fields are empty
+        $validatedData['cash_receipts'] = $validatedData['cash_receipts'] ?? 0;
+        $validatedData['cash_disbursements'] = $validatedData['cash_disbursements'] ?? 0;
+        return $validatedData;
     }
 }
