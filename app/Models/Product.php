@@ -15,13 +15,19 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Product extends Model implements HasMedia
 {
-    use HasFactory, SoftDeletes, GeneralLedgerTrait, InteractsWithMedia;
-
+    use HasFactory, SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'category_id', 'subcategory_id', 'name', 'description', 'quantity', 'unit', 'unit_price',
     ];
 
+    /**
+     * Register media collections.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('default');
+    }
 
     /**
      * Get all the product's media files.

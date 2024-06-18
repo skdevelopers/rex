@@ -65,6 +65,10 @@ class CashFlowController extends Controller
             'cash_disbursements.required_without' => 'Cash disbursements are required if cash receipts are not provided.',
         ]);
 
+        // Set default values to 0 if fields are empty
+        $validatedData['cash_receipts'] = $validatedData['cash_receipts'] ?? 0;
+        $validatedData['cash_disbursements'] = $validatedData['cash_disbursements'] ?? 0;
+
         $cashFlow = CashFlow::create($validatedData);
 
         $cashReceiptsAccount = Account::where('name', 'Cash at Bank')->first()->id;
@@ -139,6 +143,10 @@ class CashFlowController extends Controller
             'cash_receipts.required_without' => 'Cash receipts are required if cash disbursements are not provided.',
             'cash_disbursements.required_without' => 'Cash disbursements are required if cash receipts are not provided.',
         ]);
+
+        // Set default values to 0 if fields are empty
+        $validatedData['cash_receipts'] = $validatedData['cash_receipts'] ?? 0;
+        $validatedData['cash_disbursements'] = $validatedData['cash_disbursements'] ?? 0;
 
         $cashFlow->update($validatedData);
 

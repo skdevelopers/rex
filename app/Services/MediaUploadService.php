@@ -2,8 +2,12 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Image\Image as SpatieImage;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class MediaUploadService
 {
@@ -11,55 +15,49 @@ class MediaUploadService
     {
         // Validate file type
         $validator = Validator::make(['file' => $file], [
-            'file' => ['required', 'file', 'mimes:jpg,jpeg,png,gif,webp,svg'], // Add more mime types as needed
+            'file' => ['required', 'file', 'mimes:jpg,jpeg,png,gif,webp,svg'],
         ]);
 
         if ($validator->fails()) {
             return ['success' => false, 'message' => $validator->errors()->first()];
         }
 
-        // Optimize image before uploading (optional)
-        if (in_array($file->extension(), ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) {
+        // Optimize image before uploading
+        if (in_array($file->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) {
             $file = $this->optimizeImage($file);
         }
 
         // Upload and attach media
-        $media = $model->addMedia($file)->toMediaCollection();
-
-        // Additional operations on $media if needed
-        return ['success' => true, 'media' => $media];
+        try {
+            $media = $model->addMedia($file)->toMediaCollection();
+            return ['success' => true, 'media' => $media];
+        } catch (FileDoesNotExist | FileIsTooBig $e) {
+            return ['success' => false, 'message' => $e->getMessage()];
+        }
     }
 
     protected function optimizeImage($file)
     {
-        // Get the original image dimensions
-        $originalWidth = $file->getWidth();
-        $originalHeight = $file->getHeight();
-
         // Define maximum dimensions for the optimized image
-        $maxWidth = 1200; // Adjust maximum width as needed
-        $maxHeight = 800; // Adjust maximum height as needed
+        $maxWidth = 1200;
+        $maxHeight = 800;
 
-        // Calculate dimensions for resizing while maintaining aspect ratio
-        if ($originalWidth > $originalHeight) {
-            $manipulations = [
-                'optimize' => true,
-                'width' => $maxWidth,
-                'height' => null, // Automatically calculate height to maintain aspect ratio
-            ];
-        } else {
-            $manipulations = [
-                'optimize' => true,
-                'width' => null, // Automatically calculate width to maintain aspect ratio
-                'height' => $maxHeight,
-            ];
-        }
+        // Create a temporary file path
+        $tempPath = tempnam(sys_get_temp_dir(), 'optimized_');
 
-        // Perform image optimization
-        $optimizedImage = $file->manipulate($manipulations);
+        // Optimize the image using Spatie Image
+        SpatieImage::load($file->getPathname())
+            ->width($maxWidth)
+            ->height($maxHeight)
+            ->save($tempPath);
 
-        // Store the optimized image in the storage directory
-        return $optimizedImage->store();
+        // Return the optimized image file
+        return new UploadedFile($tempPath, $file->getClientOriginalName(), $file->getClientMimeType(), null, true);
+    }
+
+    public function deleteMedia($mediaId)
+    {
+        $media = Media::findOrFail($mediaId);
+        return $media->delete();
     }
 }
-

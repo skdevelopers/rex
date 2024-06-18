@@ -1,24 +1,24 @@
 <div>
     <label for="cash_receipts" class="text-gray-800 text-sm font-medium inline-block mb-2">Cash Receipts:</label>
-    <input type="text" name="cash_receipts" id="cash_receipts" value="{{ old('cash_receipts', $cashFlow->cash_receipts ?? '') }}" class="form-input" required>
+    <input type="text" name="cash_receipts" id="cash_receipts" value="{{ old('cash_receipts', $cashFlow->cash_receipts ?? '0') }}" class="form-input" required>
 </div>
 
 <div>
     <label for="cash_disbursements" class="text-gray-800 text-sm font-medium inline-block mb-2">Cash Disbursements:</label>
-    <input type="text" name="cash_disbursements" id="cash_disbursements" value="{{ old('cash_disbursements', $cashFlow->cash_disbursements ?? '') }}" class="form-input" required>
+    <input type="text" name="cash_disbursements" id="cash_disbursements" value="{{ old('cash_disbursements', $cashFlow->cash_disbursements ?? '0') }}" class="form-input" required>
 </div>
 
 <div>
     <label for="customer_id" class="text-gray-800 text-sm font-medium inline-block mb-2">Customer:</label>
     <select name="customer_id" id="customer_id" class="form-select">
-        <option value="">Select Customer</option>
+        <option value="0">Select Customer</option>
     </select>
 </div>
 
 <div>
     <label for="supplier_id" class="text-gray-800 text-sm font-medium inline-block mb-2">Supplier:</label>
     <select name="supplier_id" id="supplier_id" class="form-select">
-        <option value="">Select Supplier</option>
+        <option value="0">Select Supplier</option>
     </select>
 </div>
 
@@ -31,7 +31,7 @@
                 .then(response => {
                     const customers = response.data;
                     const customerDropdown = document.getElementById('customer_id');
-                    customerDropdown.innerHTML = '<option value="">Select Customer</option>';
+                    customerDropdown.innerHTML = '<option value="0">Select Customer</option>'; // Initialize with default value 0
                     customers.forEach(customer => {
                         const option = `<option value="${customer.id}">${customer.name}</option>`;
                         customerDropdown.innerHTML += option;
@@ -45,7 +45,7 @@
                 .then(response => {
                     const suppliers = response.data;
                     const supplierDropdown = document.getElementById('supplier_id');
-                    supplierDropdown.innerHTML = '<option value="">Select Supplier</option>';
+                    supplierDropdown.innerHTML = '<option value="0">Select Supplier</option>'; // Initialize with default value 0
                     suppliers.forEach(supplier => {
                         const option = `<option value="${supplier.id}">${supplier.name}</option>`;
                         supplierDropdown.innerHTML += option;
@@ -56,6 +56,7 @@
                 });
         });
 
+        // Event listener for cash_receipts input
         document.getElementById('cash_receipts').addEventListener('input', function () {
             const customerField = document.getElementById('customer_id');
             if (this.value > 0) {
@@ -65,12 +66,29 @@
             }
         });
 
+        // Event listener for cash_disbursements input
         document.getElementById('cash_disbursements').addEventListener('input', function () {
             const supplierField = document.getElementById('supplier_id');
             if (this.value > 0) {
                 supplierField.setAttribute('required', 'required');
             } else {
                 supplierField.removeAttribute('required');
+            }
+        });
+
+        // Handle form submission to ensure fields are set to 0 if not selected
+        document.querySelector('form').addEventListener('submit', function () {
+            if (document.getElementById('cash_receipts').value === '') {
+                document.getElementById('cash_receipts').value = '0';
+            }
+            if (document.getElementById('cash_disbursements').value === '') {
+                document.getElementById('cash_disbursements').value = '0';
+            }
+            if (document.getElementById('customer_id').value === '') {
+                document.getElementById('customer_id').value = '0';
+            }
+            if (document.getElementById('supplier_id').value === '') {
+                document.getElementById('supplier_id').value = '0';
             }
         });
     </script>

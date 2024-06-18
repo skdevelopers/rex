@@ -1,7 +1,6 @@
 @extends('layouts.vertical', ['title' => 'Products Rex ERP', 'sub_title' => 'Products', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
 
 @section('css')
-
 @endsection
 
 @section('content')
@@ -16,7 +15,11 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('upload') }}" class="dropzone text-gray-700 dark:text-gray-300 h-52" id="my-dropzone">
+                    <form action="{{ route('upload-media') }}" class="dropzone text-gray-700 dark:text-gray-300 h-52" id="my-dropzone">
+                        @csrf
+                        <input type="hidden" name="model_type" id="model_type" value="{{ $modelType }}">
+                        <input type="hidden" name="model_id" id="model_id" value="{{ $modelId ?? '' }}"> <!-- For create, $modelId might be null -->
+
                         <div class="fallback">
                             <input name="file" type="file" multiple="multiple">
                         </div>
@@ -35,12 +38,11 @@
                             <div class="dz-size"><span data-dz-size></span></div>
                             <div class="dz-filename"><span data-dz-name></span></div>
                         </div>
-                        <div class="dz-delete"><i class="mgc_delete_2_line"></i></div> <!-- Added delete icon here -->
+                        <div class="dz-delete"><i class="mgc_delete_2_line"></i></div>
                         <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
                         <div class="dz-error-message"><span data-dz-errormessage></span></div>
                     </div>
                 </div>
-
             </div>
 
             <div class="lg:col-span-3 space-y-6">

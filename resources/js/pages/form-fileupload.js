@@ -1,17 +1,23 @@
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css';
+import axios from 'axios';
 
 document.addEventListener('DOMContentLoaded', function() {
     const dropzoneElement = document.getElementById('my-dropzone');
 
     if (dropzoneElement) {
         const dropzone = new Dropzone(dropzoneElement, {
-            url: '/upload',
+            url: '/upload-media',
             method: 'post',
             headers: {
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             },
+            previewTemplate: document.querySelector('#dropzone-preview-list').innerHTML, // Set the preview template
             init: function() {
+                this.on("sending", function(file, xhr, formData) {
+                    formData.append('model_type', document.querySelector('#model_type').value);
+                    formData.append('model_id', document.querySelector('#model_id').value);
+                });
                 this.on("addedfile", function(file) {
                     console.log("File added:", file);
                 });
@@ -20,43 +26,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 this.on("success", function(file, response) {
                     console.log("File uploaded successfully:", response);
+                    file.uploadedMediaId = response.media_id; // Store the uploaded media ID for later deletion
+                    addDeleteIcon(file); // Add delete icon when file is uploaded
                 });
                 this.on("error", function(file, errorMessage) {
                     console.error("Error uploading file:", errorMessage);
+                    let message = 'An error occurred';
+                    if (errorMessage && errorMessage.errors) {
+                        message = Object.values(errorMessage.errors).flat().join('. ');
+                    }
+                    file.previewElement.querySelector('[data-dz-errormessage]').textContent = message;
                 });
             }
         });
 
-        dropzone.on('sending', function(file, xhr, formData) {
-            // Prevent the default form submission
-            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
-        });
+        function addDeleteIcon(file) {
+            const deleteButton = file.previewElement.querySelector('.dz-delete');
+            deleteButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
 
-        // Add event listener for delete icon
-        dropzoneElement.addEventListener('click', function(event) {
-            if (event.target.matches('.mgc_delete_2_line')) {
-                const imageName = event.target.getAttribute('data-image-name');
-
-                // Remove the image preview from Dropzone
-                dropzone.files.forEach(function(file) {
-                    if (file.name === imageName) {
-                        dropzone.removeFile(file);
-                    }
-                });
-
-                // Send Axios request to delete the image from the server
-                axios.delete(`/delete-image/${imageName}`, {
+                // Send a delete request to the server
+                axios.delete(`/delete-media/${file.uploadedMediaId}`, {
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     }
-                })
-                    .then(response => {
-                        console.log('Image deleted successfully.');
-                    })
-                    .catch(error => {
-                        console.error('Error deleting image:', error);
-                    });
-            }
-        });
+                }).then(response => {
+                    console.log('Image deleted successfully.');
+                    // Remove the file preview
+                    dropzone.removeFile(file);
+                }).catch(error => {
+                    console.error('Error deleting image:', error);
+                });
+            });
+        }
     }
 });

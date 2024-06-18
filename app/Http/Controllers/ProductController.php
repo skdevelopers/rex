@@ -40,7 +40,8 @@ class ProductController extends Controller
     {
         $categories = Category::whereNull('parent_id')->with('children')->get();
         $attributes = Attribute::all(); // Load all attributes
-        return view('products.create', compact('categories', 'attributes'));
+        $modelType = 'App\\Models\\Product'; // Model type for Product
+        return view('products.create', compact('categories', 'attributes', 'modelType'));
     }
 
     /**
@@ -102,9 +103,10 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::whereNull('parent_id')->with('children')->get();
-        // Load attributes for the product
         $attributes = $product->attributes()->get();
-        return view('products.edit', compact('product', 'attributes', 'categories'));
+        $modelType = 'App\\Models\\Product'; // Model type for Product
+        $modelId = $product->id; // Product ID
+        return view('products.edit', compact('product', 'attributes', 'categories', 'modelType', 'modelId'));
     }
 
     /**

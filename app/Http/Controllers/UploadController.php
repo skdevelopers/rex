@@ -2,43 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
+use App\Services\MediaUploadService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
 {
-    /**
-     * Handle file upload.
-     *
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function upload(Request $request)
+    private MediaUploadService $mediaUploadService;
+
+    public function __construct(MediaUploadService $mediaUploadService)
     {
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $path = $file->store('uploads', 'public');
-
-            return response()->json(['path' => $path], 200);
-        }
-
-        return response()->json(['error' => 'No file uploaded'], 400);
+        $this->mediaUploadService = $mediaUploadService;
     }
 
     /**
-     * Delete image.
+     * Handle media upload.
      *
-     * @param string $imageName
-     * @return JsonResponse
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function delete($imageName)
+    public function upload(Request $request)
     {
-        if (Storage::disk('public')->exists($imageName)) {
-            Storage::disk('public')->delete($imageName);
-            return response()->json(['message' => 'Image deleted successfully'], 200);
-        }
+        $request->validate([
+            'file' => 'required|file|mimes:jpg,jpeg,png,gif,webp|max:2048',
+            'model_type' => 'required|string',
+            'model_id' => 'required|integer',
+        ]);
 
-        return response()->json(['error' => 'Image not found'], 404);
+        $modelClass = $request->input('model_type');
+        $model = $modelClass::findOrFail($request->input('model_id'));
+
+        $result = $this->mediaUploadService->uploadAndAttachMedia($request->file('file'), $model);
+
+        if ($result['success']) {
+            return response()->json(['media_id' => $result['media']->id, 'path' => $result['media']->getUrl()], 200);
+        } else {
+            return response()->json(['error' => $result['message']], 400);
+        }
+    }
+
+    /**
+     * Handle media deletion.
+     *
+     * @param int $mediaId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete($mediaId)
+    {
+        try {
+            $this->mediaUploadService->deleteMedia($mediaId);
+            return response()->json(['message' => 'File deleted'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
 }
