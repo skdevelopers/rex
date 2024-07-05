@@ -103,10 +103,9 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::whereNull('parent_id')->with('children')->get();
-        $attributes = $product->attributes()->get();
         $modelType = 'App\\Models\\Product'; // Model type for Product
         $modelId = $product->id; // Product ID
-        return view('products.edit', compact('product', 'attributes', 'categories', 'modelType', 'modelId'));
+        return view('products.edit', compact('product','categories', 'modelType', 'modelId'));
     }
 
     /**
