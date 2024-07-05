@@ -24,8 +24,11 @@ use App\Http\Controllers\PermissionController;
 */
 
 require __DIR__ . '/auth.php';
+    Route::get('/{any}', function () {
+        return view('welcome');
+    })->where('any', '.*');
 
-    // Resource routes for managing permissions
+// Resource routes for managing permissions
     Route::resource('permissions', PermissionController::class)->names([
         'index' => 'permissions.index',
         'create' => 'permissions.create',

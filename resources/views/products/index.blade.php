@@ -31,7 +31,7 @@
                         <tr>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->description }}</td>
-                            <td>{{ $product->category->name }}</td>
+                            <td>{{ optional($product->category)->name ?? 'N/A' }}</td>
                             <td>{{ optional($product->subcategory)->name ?? 'N/A' }}</td>
                             <td>{{ $product->quantity }}</td>
                             <td>{{ $product->unit }}</td>
