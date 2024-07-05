@@ -25,6 +25,9 @@
         <label for="subcategory_id" class="mb-2 block">Subcategory:</label>
         <select name="subcategory_id" id="subcategory_id" class="form-select">
             <option value="">Select Subcategory</option>
+            @if(isset($product->subcategory_id))
+                <option value="{{ $product->subcategory_id }}" selected>{{ $product->subcategory->name }}</option>
+            @endif
         </select>
     </div>
 
@@ -32,6 +35,9 @@
         <label for="sub_subcategory_id" class="mb-2 block">Sub-Subcategory:</label>
         <select name="sub_subcategory_id" id="sub_subcategory_id" class="form-select">
             <option value="">Select Sub-Subcategory</option>
+            @if(isset($product->sub_subcategory_id))
+                <option value="{{ $product->sub_subcategory_id }}" selected>{{ $product->subSubcategory->name }}</option>
+            @endif
         </select>
     </div>
 
@@ -81,26 +87,31 @@
                 }
 
                 axios.get(`/categories/${parentId}/subcategories`)
-                        .then(function(response) {
-                            console.log('Subcategories loaded:', response.data); // Debug log
-                            let options = `<option value="">${placeholder}</option>`;
-                            if (response.data.length > 0) {
-                                response.data.forEach(subcategory => {
-                                    options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
-                                });
-                            } else {
-                                options += '<option value="">N/A</option>';
-                                options += '<option value="create"><a href="/subcategories/create">Create new subcategory</a></option>';
-                            }
-                            targetElement.innerHTML = options;
-                        })
-                        .catch(function(error) {
-                            console.error('Error loading subcategories:', error); // Debug log
-                        });
+                    .then(function(response) {
+                        console.log('Subcategories loaded:', response.data); // Debug log
+                        let options = `<option value="">${placeholder}</option>`;
+                        if (response.data.length > 0) {
+                            response.data.forEach(subcategory => {
+                                options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
+                            });
+                        } else {
+                            options += '<option value="">N/A</option>';
+                            options += '<option value="create"><a href="/subcategories/create">Create new subcategory</a></option>';
+                        }
+                        targetElement.innerHTML = options;
+                    })
+                    .catch(function(error) {
+                        console.error('Error loading subcategories:', error); // Debug log
+                    });
+            }
+
+            // Initial population on edit if category is selected
+            if (categorySelect.value) {
+                loadSubcategories(categorySelect.value, 'subcategory_id', 'Select Subcategory');
+            }
+            if (subcategorySelect.value) {
+                loadSubcategories(subcategorySelect.value, 'sub_subcategory_id', 'Select Sub-Subcategory');
             }
         });
     </script>
 @endpush
-
-
-
