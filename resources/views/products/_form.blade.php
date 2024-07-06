@@ -64,17 +64,7 @@
             const subcategorySelect = document.getElementById('subcategory_id');
             const subSubcategorySelect = document.getElementById('sub_subcategory_id');
 
-            categorySelect.addEventListener('change', function() {
-                const categoryId = this.value;
-                loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
-                subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
-            });
-
-            subcategorySelect.addEventListener('change', function() {
-                const subcategoryId = this.value;
-                loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
-            });
-
+            // Function to load subcategories dynamically
             function loadSubcategories(parentId, elementId, placeholder) {
                 const targetElement = document.getElementById(elementId);
                 if (!parentId) {
@@ -94,11 +84,32 @@
                             options += '<option value="create"><a href="/subcategories/create">Create new subcategory</a></option>';
                         }
                         targetElement.innerHTML = options;
+
+                        // Trigger change event after updating options
+                        if (elementId === 'subcategory_id') {
+                            subcategorySelect.value = "{{ $product->subcategory_id }}";
+                            subcategorySelect.dispatchEvent(new Event('change'));
+                        } else if (elementId === 'sub_subcategory_id') {
+                            subSubcategorySelect.value = "{{ $product->sub_subcategory_id }}";
+                        }
                     })
                     .catch(function(error) {
                         console.error('Error loading subcategories:', error);
                     });
             }
+
+            // Event listener for category change
+            categorySelect.addEventListener('change', function() {
+                const categoryId = this.value;
+                loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
+                subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
+            });
+
+            // Event listener for subcategory change
+            subcategorySelect.addEventListener('change', function() {
+                const subcategoryId = this.value;
+                loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
+            });
 
             // Initial population on edit if category and subcategory are selected
             if (categorySelect.value) {
