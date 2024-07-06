@@ -87,10 +87,12 @@
 
                         // Trigger change event after updating options
                         if (elementId === 'subcategory_id') {
-                            subcategorySelect.value = "{{ $product->subcategory_id }}";
+                            // Select the option based on the product's subcategory_id
+                            subcategorySelect.value = "{{ $product->subcategory_id ?? '' }}";
                             subcategorySelect.dispatchEvent(new Event('change'));
                         } else if (elementId === 'sub_subcategory_id') {
-                            subSubcategorySelect.value = "{{ $product->sub_subcategory_id }}";
+                            // Select the option based on the product's sub_subcategory_id
+                            subSubcategorySelect.value = "{{ $product->sub_subcategory_id ?? '' }}";
                         }
                     })
                     .catch(function(error) {

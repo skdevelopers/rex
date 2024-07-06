@@ -1,4 +1,3 @@
-<!-- resources/views/products/index.blade.php -->
 @extends('layouts.vertical', ['title' => 'Products Rex ERP', 'sub_title' => 'Products', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
 
 @section('content')
@@ -20,6 +19,7 @@
                         <th>Description</th>
                         <th>Category</th>
                         <th>Subcategory</th>
+                        <th>Sub-Subcategory</th>
                         <th>Quantity</th>
                         <th>Unit</th>
                         <th>Unit Price</th>
@@ -33,6 +33,7 @@
                             <td>{{ $product->description }}</td>
                             <td>{{ optional($product->category)->name ?? 'N/A' }}</td>
                             <td>{{ optional($product->subcategory)->name ?? 'N/A' }}</td>
+                            <td>{{ optional($product->subSubcategory)->name ?? 'N/A' }}</td>
                             <td>{{ $product->quantity }}</td>
                             <td>{{ $product->unit }}</td>
                             <td>{{ $product->unit_price }}</td>
@@ -59,4 +60,3 @@
         </div>
     </div>
 @endsection
-
