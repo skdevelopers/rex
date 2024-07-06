@@ -6,10 +6,9 @@
 import Dropzone from 'dropzone';
 import 'dropzone/dist/dropzone.css';
 import axios from "axios";
-
 import "@frostui/tailwindcss"
-
 import feather from 'feather-icons';
+
 
 // Make Axios available globally (optional)
 window.axios = axios;

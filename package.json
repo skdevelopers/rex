@@ -13,7 +13,7 @@
         "sass": "^1.70.0",
         "sass-loader": "^14.1.0",
         "tailwindcss": "^3.4.1",
-        "vite": "^5.1.2"
+        "vite": "5.2.6"
     },
     "dependencies": {
         "@frostui/tailwindcss": "^0.1.5",
@@ -31,7 +31,7 @@
         "fullcalendar": "6.1.10",
         "glightbox": "^3.2.0",
         "gmaps": "^0.4.25",
-        "gridjs": "^6.1.1",
+        "gridjs": "^6.2.0",
         "inputmask": "^5.0.7",
         "jsvectormap": "1.5.3",
         "nice-select2": "^2.1.0",

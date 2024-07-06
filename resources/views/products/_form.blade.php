@@ -1,127 +1,86 @@
-<div class="card p-6">
-    <div class="form-group">
-        <label for="name" class="mb-2 block">Name:</label>
-        <input type="text" name="name" id="name" class="form-input" value="{{ $product->name ?? '' }}" required>
+@extends('layouts.vertical', ['title' => 'Products Rex ERP', 'sub_title' => 'Products', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
+
+
+@section('content')
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Product List</h2>
+                <div class="mb-4">
+                    <a href="{{ route('products.create') }}" class="btn inline-flex justify-center items-center bg-primary text-white w-full fc-dropdown">
+                        <i class="mgc_add_line text-lg me-2"></i> Create New
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <table class="table" id="products-table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Category</th>
+                        <th>Subcategory</th>
+                        <th>Sub-Subcategory</th>
+                        <th>Quantity</th>
+                        <th>Unit</th>
+                        <th>Unit Price</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Table rows will be populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
+@endsection
 
-    <div class="form-group">
-        <label for="description" class="mb-2 block">Description:</label>
-        <textarea name="description" id="description" class="form-input" required>{{ $product->description ?? '' }}</textarea>
-    </div>
+@section('scripts')
+    <script >
 
-    <div class="form-group">
-        <label for="category_id" class="mb-2 block">Category:</label>
-        <select name="category_id" id="category_id" class="form-select" required>
-            <option value="">Select Category</option>
-            @foreach ($categories as $category)
-                <option value="{{ $category->id }}" {{ isset($product) && $product->category_id == $category->id ? 'selected' : '' }}>
-                    {{ $category->name }}
-                </option>
-            @endforeach
-        </select>
-    </div>
+        document.addEventListener('DOMContentLoaded', function () {
+            axios.get("{{ route('products.index') }}")
+                .then(response => {
+                    const products = response.data;
+                    const tableBody = document.querySelector('#products-table tbody');
+                    let tableRows = '';
 
-    <div class="form-group">
-        <label for="subcategory_id" class="mb-2 block">Subcategory:</label>
-        <select name="subcategory_id" id="subcategory_id" class="form-select">
-            <option value="">Select Subcategory</option>
-            @if ($product && $product->subcategory)
-                <option value="{{ $product->subcategory->id }}" selected>{{ $product->subcategory->name }}</option>
-            @endif
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="sub_subcategory_id" class="mb-2 block">Sub-Subcategory:</label>
-        <select name="sub_subcategory_id" id="sub_subcategory_id" class="form-select">
-            <option value="">Select Sub-Subcategory</option>
-            @if ($product && $product->subSubcategory)
-                <option value="{{ $product->subSubcategory->id }}" selected>{{ $product->subSubcategory->name }}</option>
-            @endif
-        </select>
-    </div>
-
-    <div class="form-group">
-        <label for="quantity" class="mb-2 block">Quantity:</label>
-        <input type="number" name="quantity" id="quantity" class="form-input" value="{{ $product->quantity ?? '' }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="unit" class="mb-2 block">Unit:</label>
-        <input type="text" name="unit" id="unit" class="form-input" value="{{ $product->unit ?? '' }}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="unit_price" class="mb-2 block">Unit Price:</label>
-        <input type="text" name="unit_price" id="unit_price" class="form-input" value="{{ $product->unit_price ?? '' }}" required>
-    </div>
-</div>
-
-@push('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const categorySelect = document.getElementById('category_id');
-            const subcategorySelect = document.getElementById('subcategory_id');
-            const subSubcategorySelect = document.getElementById('sub_subcategory_id');
-
-            // Function to load subcategories dynamically
-            function loadSubcategories(parentId, elementId, placeholder) {
-                const targetElement = document.getElementById(elementId);
-                if (!parentId) {
-                    targetElement.innerHTML = `<option value="">${placeholder}</option>`;
-                    return;
-                }
-
-                axios.get(`/categories/${parentId}/subcategories`)
-                    .then(function(response) {
-                        let options = `<option value="">${placeholder}</option>`;
-                        if (response.data.length > 0) {
-                            response.data.forEach(subcategory => {
-                                options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
-                            });
-                        } else {
-                            options += '<option value="">N/A</option>';
-                            options += '<option value="create"><a href="/subcategories/create">Create new subcategory</a></option>';
-                        }
-                        targetElement.innerHTML = options;
-
-                        // Trigger change event after updating options
-                        if (elementId === 'subcategory_id') {
-                            // Select the option based on the product's subcategory_id
-                            subcategorySelect.value = "{{ $product->subcategory_id ?? '' }}";
-                            subcategorySelect.dispatchEvent(new Event('change'));
-                        } else if (elementId === 'sub_subcategory_id') {
-                            // Select the option based on the product's sub_subcategory_id
-                            subSubcategorySelect.value = "{{ $product->sub_subcategory_id ?? '' }}";
-                        }
-                    })
-                    .catch(function(error) {
-                        console.error('Error loading subcategories:', error);
+                    products.forEach(product => {
+                        tableRows += `
+                            <tr>
+                                <td>${product.name}</td>
+                                <td>${product.description}</td>
+                                <td>${product.category ? product.category.name : 'N/A'}</td>
+                                <td>${product.subcategory ? product.subcategory.name : 'N/A'}</td>
+                                <td>${product.subSubcategory ? product.subSubcategory.name : 'N/A'}</td>
+                                <td>${product.quantity}</td>
+                                <td>${product.unit}</td>
+                                <td>${product.unit_price}</td>
+                                <td>
+                                    <a href="{{ url('products') }}/${product.id}/edit" class="text-blue-500 hover:text-blue-700 mx-0.5">
+                                        <i class="mgc_edit_line text-lg"></i>
+                                    </a>
+                                    <form action="{{ url('products') }}/${product.id}" method="POST" class="inline">
+                                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-500 hover:text-red-700 mx-0.5">
+                            <i class="mgc_delete_line text-xl"></i>
+                        </button>
+                    </form>
+                    <a href="{{ url('products') }}/${product.id}" class="text-green-500 hover:text-green-700 mx-0.5">
+                                        <i class="mgc_display_line text-lg"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
                     });
-            }
 
-            // Event listener for category change
-            categorySelect.addEventListener('change', function() {
-                const categoryId = this.value;
-                loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
-                subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
-            });
-
-            // Event listener for subcategory change
-            subcategorySelect.addEventListener('change', function() {
-                const subcategoryId = this.value;
-                loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
-            });
-
-            // Initial population on edit if category and subcategory are selected
-            if (categorySelect.value) {
-                loadSubcategories(categorySelect.value, 'subcategory_id', 'Select Subcategory');
-            }
-            if (subcategorySelect.value) {
-                loadSubcategories(subcategorySelect.value, 'sub_subcategory_id', 'Select Sub-Subcategory');
-            }
+                    tableBody.innerHTML = tableRows;
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
         });
     </script>
-@endpush
-
-
+@endsection
