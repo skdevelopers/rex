@@ -14,7 +14,7 @@
         <select name="category_id" id="category_id" class="form-select" required>
             <option value="">Select Category</option>
             @foreach ($categories as $category)
-                <option value="{{ $category->id }}" @if(isset($product) && $product->category_id == $category->id) selected @endif>
+                <option value="{{ $category->id }}" {{ isset($product) && $product->category_id == $category->id ? 'selected' : '' }}>
                     {{ $category->name }}
                 </option>
             @endforeach
@@ -25,8 +25,8 @@
         <label for="subcategory_id" class="mb-2 block">Subcategory:</label>
         <select name="subcategory_id" id="subcategory_id" class="form-select">
             <option value="">Select Subcategory</option>
-            @if(isset($product->subcategory_id))
-                <option value="{{ $product->subcategory_id }}" selected>{{ $product->subcategory->name }}</option>
+            @if ($product && $product->subcategory)
+                <option value="{{ $product->subcategory->id }}" selected>{{ $product->subcategory->name }}</option>
             @endif
         </select>
     </div>
@@ -35,8 +35,8 @@
         <label for="sub_subcategory_id" class="mb-2 block">Sub-Subcategory:</label>
         <select name="sub_subcategory_id" id="sub_subcategory_id" class="form-select">
             <option value="">Select Sub-Subcategory</option>
-            @if(isset($product->sub_subcategory_id))
-                <option value="{{ $product->sub_subcategory_id }}" selected>{{ $product->subSubcategory->name }}</option>
+            @if ($product && $product->subSubcategory)
+                <option value="{{ $product->subSubcategory->id }}" selected>{{ $product->subSubcategory->name }}</option>
             @endif
         </select>
     </div>
@@ -66,29 +66,24 @@
 
             categorySelect.addEventListener('change', function() {
                 const categoryId = this.value;
-                console.log('Category changed:', categoryId); // Debug log
                 loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
                 subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
             });
 
             subcategorySelect.addEventListener('change', function() {
                 const subcategoryId = this.value;
-                console.log('Subcategory changed:', subcategoryId); // Debug log
                 loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
             });
 
             function loadSubcategories(parentId, elementId, placeholder) {
-                console.log('Loading subcategories for parent ID:', parentId); // Debug log
                 const targetElement = document.getElementById(elementId);
                 if (!parentId) {
                     targetElement.innerHTML = `<option value="">${placeholder}</option>`;
-                    console.log('No parent ID provided, clearing subcategories.'); // Debug log
                     return;
                 }
 
                 axios.get(`/categories/${parentId}/subcategories`)
                     .then(function(response) {
-                        console.log('Subcategories loaded:', response.data); // Debug log
                         let options = `<option value="">${placeholder}</option>`;
                         if (response.data.length > 0) {
                             response.data.forEach(subcategory => {
@@ -101,11 +96,11 @@
                         targetElement.innerHTML = options;
                     })
                     .catch(function(error) {
-                        console.error('Error loading subcategories:', error); // Debug log
+                        console.error('Error loading subcategories:', error);
                     });
             }
 
-            // Initial population on edit if category is selected
+            // Initial population on edit if category and subcategory are selected
             if (categorySelect.value) {
                 loadSubcategories(categorySelect.value, 'subcategory_id', 'Select Subcategory');
             }

@@ -110,6 +110,7 @@ class ProductController extends Controller
 
     /**
      * Update the specified product in storage.
+     * @throws ValidationException
      */
     public function update(Request $request, Product $product)
     {
