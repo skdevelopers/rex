@@ -1,8 +1,5 @@
 @extends('layouts.vertical', ['title' => 'Products Rex ERP', 'sub_title' => 'Products', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
 
-@section('css')
-@endsection
-
 @section('content')
     <div class="container">
         <div class="grid lg:grid-cols-4 gap-6">
@@ -15,11 +12,7 @@
                         </div>
                     </div>
 
-                    <form action="{{ route('upload-media') }}" class="dropzone text-gray-700 dark:text-gray-300 h-52" id="my-dropzone">
-                        @csrf
-                        <input type="hidden" name="model_type" id="model_type" value="{{ $modelType }}">
-                        <input type="hidden" name="model_id" id="model_id" value="{{ $modelId ?? '' }}"> <!-- For create, $modelId might be null -->
-
+                    <form action="#" class="dropzone text-gray-700 dark:text-gray-300 h-52">
                         <div class="fallback">
                             <input name="file" type="file" multiple="multiple">
                         </div>
@@ -27,21 +20,6 @@
                             <i class="mgc_pic_2_line text-8xl"></i>
                         </div>
                     </form>
-
-                    <div id="dropzone-preview" class="dropzone-previews"></div>
-                </div>
-                <!-- Hidden template for previews -->
-                <div id="dropzone-preview-list" class="hidden">
-                    <div class="dz-preview dz-file-preview">
-                        <div class="dz-image"><img data-dz-thumbnail /></div>
-                        <div class="dz-details">
-                            <div class="dz-size"><span data-dz-size></span></div>
-                            <div class="dz-filename"><span data-dz-name></span></div>
-                        </div>
-                        <div class="dz-delete"><i class="mgc_delete_2_line"></i></div>
-                        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-                        <div class="dz-error-message"><span data-dz-errormessage></span></div>
-                    </div>
                 </div>
             </div>
 
@@ -68,6 +46,38 @@
     </div>
 @endsection
 
-@section('script')
-    @vite(['resources/js/pages/highlight.js','resources/js/pages/form-fileupload.js',])
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const categorySelect = document.getElementById('category_id');
+            const subcategorySelect = document.getElementById('subcategory_id');
+            const subSubcategorySelect = document.getElementById('sub_subcategory_id');
+
+            function loadSubcategories(parentId, elementId, placeholder) {
+                const targetElement = document.getElementById(elementId);
+                axios.get(`/categories/${parentId}/subcategories`)
+                    .then(function(response) {
+                        let options = `<option value="">${placeholder}</option>`;
+                        response.data.forEach(subcategory => {
+                            options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
+                        });
+                        targetElement.innerHTML = options;
+                    })
+                    .catch(function(error) {
+                        console.error('Error loading subcategories:', error);
+                    });
+            }
+
+            categorySelect.addEventListener('change', function() {
+                const categoryId = this.value;
+                loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
+                subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
+            });
+
+            subcategorySelect.addEventListener('change', function() {
+                const subcategoryId = this.value;
+                loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
+            });
+        });
+    </script>
 @endsection
