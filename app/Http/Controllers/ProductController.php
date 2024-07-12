@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\MediaUploadService;
 use App\Traits\GeneralLedgerTrait;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -33,6 +34,15 @@ class ProductController extends Controller
         return view('products.index', compact('products'));
     }
 
+    /**
+     * Display a listing of the resource as JSON.
+     */
+    public function indexJson(): JsonResponse
+    {
+        // Retrieve all products with category and subcategory eager loaded
+        $products = Product::with('category', 'subcategory')->get();
+        return response()->json($products);
+    }
     /**
      * Show the form for creating a new product.
      */

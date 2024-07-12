@@ -56,6 +56,7 @@ Route::prefix('/api/')->group(function () {
     Route::get('customers', [CustomerController::class, 'indexJson'])->name('api.customers.index');
     Route::get('suppliers', [SupplierController::class, 'indexJson'])->name('api.suppliers.index');
     Route::get('cash-flows', [CashFlowController::class, 'indexJson'])->name('api.cash-flows.index');
+    Route::get('products', [ProductController::class, 'indexJson'])->name('api.products.index');
 
     // Add more API routes as needed
 });
