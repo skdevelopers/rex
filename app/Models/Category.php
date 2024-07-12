@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    use HasFactory, softDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['name', 'parent_id'];
 
@@ -45,5 +45,16 @@ class Category extends Model
     {
         return $this->children();
     }
+
+    /**
+     * Get the sub-subcategories.
+     */
+    public function subSubcategories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'parent_id')->whereHas('parent', function ($query) {
+            $query->whereNotNull('parent_id');
+        });
+    }
 }
+
 

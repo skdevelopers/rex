@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Traits\GeneralLedgerTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +17,7 @@ class Product extends Model implements HasMedia
     use HasFactory, SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
-        'category_id', 'subcategory_id', 'name', 'description', 'quantity', 'unit', 'unit_price',
+        'category_id', 'subcategory_id', 'sub_subcategory_id', 'name', 'description', 'quantity', 'unit', 'unit_price',
     ];
 
     /**
@@ -41,6 +40,7 @@ class Product extends Model implements HasMedia
     {
         return $this->hasMany(Attribute::class);
     }
+
     public function stockTransactions(): HasMany
     {
         return $this->hasMany(StockTransaction::class);
@@ -60,15 +60,15 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo(Category::class);
     }
-    // Define the subcategory relationship through the Category model
+
     public function subcategory(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'subcategory_id');
     }
-    // Define the sub subcategory relationship through the Category model
+
     public function subSubCategory(): BelongsTo
     {
         return $this->belongsTo(Category::class, 'sub_subcategory_id');
     }
-
 }
+

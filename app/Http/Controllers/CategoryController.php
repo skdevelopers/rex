@@ -84,13 +84,29 @@ class CategoryController extends Controller
     }
 
     /**
-     * Get subcategories of the specified resource.
+     * Get the subcategories for a given category.
+     *
+     * @param Category $category
+     * @return JsonResponse
      */
     public function getSubcategories(Category $category): JsonResponse
     {
         $subcategories = $category->children()->get(['id', 'name']);
         return response()->json($subcategories);
     }
+
+    /**
+     * Get the sub-subcategories for a given subcategory.
+     *
+     * @param Category $subcategory
+     * @return JsonResponse
+     */
+    public function getSubSubcategories(Category $subcategory): JsonResponse
+    {
+        $subSubcategories = $subcategory->children()->get(['id', 'name']);
+        return response()->json($subSubcategories);
+    }
+
 }
 
 

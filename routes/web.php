@@ -39,8 +39,9 @@ require __DIR__ . '/auth.php';
         'destroy' => 'permissions.destroy',
     ])->middleware('auth');
 
-Route::get('categories/{category}/subcategories', [CategoryController::class, 'getSubcategories'])
-    ->name('categories.subcategories');
+Route::get('/categories/{category}/subcategories', [CategoryController::class, 'getSubcategories']);
+Route::get('/subcategories/{subcategory}/subsubcategories', [CategoryController::class, 'getSubSubcategories']);
+
 Route::resource('categories', CategoryController::class)->middleware('auth');
 Route::resource('roles', RoleController::class)->middleware('auth');
 Route::resource('customers', CustomerController::class)->middleware('auth');
