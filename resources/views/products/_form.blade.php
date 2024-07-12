@@ -56,6 +56,7 @@
         <input type="text" name="unit_price" id="unit_price" class="form-input" value="{{ $product->unit_price ?? '' }}" required>
     </div>
 </div>
+
 @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -63,31 +64,21 @@
             const subcategorySelect = document.getElementById('subcategory_id');
             const subSubcategorySelect = document.getElementById('sub_subcategory_id');
 
+            // Function to load subcategories
             function loadSubcategories(parentId, elementId, placeholder) {
                 const targetElement = document.getElementById(elementId);
-                if (!parentId) {
-                    targetElement.innerHTML = `<option value="">${placeholder}</option>`;
-                    return;
-                }
-
                 axios.get(`/categories/${parentId}/subcategories`)
                     .then(function(response) {
                         let options = `<option value="">${placeholder}</option>`;
-                        if (response.data.length > 0) {
-                            response.data.forEach(subcategory => {
-                                options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
-                            });
-                        } else {
-                            options += '<option value="">N/A</option>';
-                            options += '<option value="create"><a href="/subcategories/create">Create new subcategory</a></option>';
-                        }
+                        response.data.forEach(subcategory => {
+                            options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
+                        });
                         targetElement.innerHTML = options;
 
-                        if (elementId === 'subcategory_id') {
-                            subcategorySelect.value = "{{ $product->subcategory_id ?? '' }}";
-                            subcategorySelect.dispatchEvent(new Event('change'));
-                        } else if (elementId === 'sub_subcategory_id') {
-                            subSubcategorySelect.value = "{{ $product->sub_subcategory_id ?? '' }}";
+                        // Set selected option if editing
+                        const selectedValue = elementId === 'subcategory_id' ? "{{ $product->subcategory_id ?? '' }}" : "{{ $product->sub_subcategory_id ?? '' }}";
+                        if (selectedValue) {
+                            targetElement.value = selectedValue;
                         }
                     })
                     .catch(function(error) {
@@ -95,17 +86,20 @@
                     });
             }
 
+            // Event listener for category select
             categorySelect.addEventListener('change', function() {
                 const categoryId = this.value;
                 loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
                 subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
             });
 
+            // Event listener for subcategory select
             subcategorySelect.addEventListener('change', function() {
                 const subcategoryId = this.value;
                 loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
             });
 
+            // Initial load if category already selected
             if (categorySelect.value) {
                 loadSubcategories(categorySelect.value, 'subcategory_id', 'Select Subcategory');
             }
@@ -115,4 +109,3 @@
         });
     </script>
 @endsection
-
