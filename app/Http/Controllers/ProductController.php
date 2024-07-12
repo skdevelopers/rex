@@ -115,7 +115,7 @@ class ProductController extends Controller
         $categories = Category::whereNull('parent_id')->with('children')->get();
         $modelType = 'App\\Models\\Product'; // Model type for Product
         $modelId = $product->id; // Product ID
-        return view('products.edit', compact('product','categories', 'modelType', 'modelId'));
+        return view('products.edit', compact('product', 'categories', 'modelType', 'modelId'));
     }
 
     /**
