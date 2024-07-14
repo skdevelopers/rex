@@ -1,4 +1,4 @@
-@extends('layouts.vertical', ['title' => 'Edit Product'])
+@extends('layouts.vertical', ['title' => 'Edit Product', 'sub_title' => 'Products'])
 
 @section('content')
     <div class="container">
