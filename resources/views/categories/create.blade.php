@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="container">
-        <div class="grid lg:grid-cols-4 gap-6">
+        <div class="grid lg:grid-cols-8 gap-6">
             <div class="col-span-1 flex flex-col gap-6">
                 <div class="card p-6">
                     <h1>Create Category</h1>
