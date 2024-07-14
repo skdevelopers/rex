@@ -11,7 +11,7 @@
                     <form action="{{ route('categories.store') }}" method="POST">
                         @csrf
                         @include('categories._form')
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="submit" class="btn btn-sm bg-primary text-white rounded-e-none">Create</button>
                     </form>
                 </div>
             </div>

@@ -11,7 +11,7 @@
                         @csrf
                         @method('PUT')
                         @include('categories._form', ['category' => $category])
-                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="submit" class="btn btn-sm bg-primary text-white rounded-e-none">Update</button>
                     </form>
                 </div>
             </div>
