@@ -41,11 +41,9 @@
     @include('layouts.shared/footer-scripts')
 
     @vite(['resources/js/app.js'])
+    @stack('scripts')
     <script>
         document.getElementById("year").innerHTML = (new Date().getFullYear());
     </script>
-    @stack('scripts')
 </body>
-
-
 </html>

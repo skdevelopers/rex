@@ -45,39 +45,6 @@
         </div>
     </div>
 @endsection
-
-@section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const categorySelect = document.getElementById('category_id');
-            const subcategorySelect = document.getElementById('subcategory_id');
-            const subSubcategorySelect = document.getElementById('sub_subcategory_id');
-
-            function loadSubcategories(parentId, elementId, placeholder) {
-                const targetElement = document.getElementById(elementId);
-                axios.get(`/categories/${parentId}/subcategories`)
-                    .then(function(response) {
-                        let options = `<option value="">${placeholder}</option>`;
-                        response.data.forEach(subcategory => {
-                            options += `<option value="${subcategory.id}">${subcategory.name}</option>`;
-                        });
-                        targetElement.innerHTML = options;
-                    })
-                    .catch(function(error) {
-                        console.error('Error loading subcategories:', error);
-                    });
-            }
-
-            categorySelect.addEventListener('change', function() {
-                const categoryId = this.value;
-                loadSubcategories(categoryId, 'subcategory_id', 'Select Subcategory');
-                subSubcategorySelect.innerHTML = '<option value="">Select Sub-Subcategory</option>';
-            });
-
-            subcategorySelect.addEventListener('change', function() {
-                const subcategoryId = this.value;
-                loadSubcategories(subcategoryId, 'sub_subcategory_id', 'Select Sub-Subcategory');
-            });
-        });
-    </script>
+@section('script')
+    @vite(['resources/js/pages/highlight.js','resources/js/pages/form-fileupload.js',])
 @endsection
