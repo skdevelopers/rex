@@ -144,139 +144,132 @@
 @endsection
 @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            let rowCount = 0;
+        let rowCount = 0;
 
-            // Function to add a new row
-            function addRow() {
-                rowCount++;
-                const tableBody = document.getElementById('productTableBody');
-                const newRow = document.createElement('div');
-                newRow.classList.add('grid', 'grid-cols-12', 'gap-4', 'py-4');
+        // Function to add a new row
+        function addRow() {
+            rowCount++;
+            const tableBody = document.getElementById('productTableBody');
+            const newRow = document.createElement('div');
+            newRow.classList.add('grid', 'grid-cols-12', 'gap-4', 'py-4');
 
-                newRow.innerHTML = `
-                    <div class="col-span-1 flex items-center justify-center">
-                        <span>${rowCount}</span>
-                    </div>
-                    <div class="col-span-5 flex items-center justify-center">
-                        <input type="text" placeholder="Scan / search products by code / name" class="border border-gray-300 rounded w-full text-left">
-                    </div>
-                    <div class="col-span-1 flex items-center justify-center">
-                        <input type="text" class="unit border border-gray-300 rounded w-full text-center">
-                    </div>
-                    <div class="col-span-1 flex items-center justify-center">
-                        <input type="text" class="unit-price border border-gray-300 rounded w-full text-center" oninput="calculateTotal(this)">
-                    </div>
-                    <div class="col-span-1 flex items-center justify-center">
-                        <div class="relative">
-                            <input type="number" class="q-input border border-gray-300 rounded w-20 text-center pr-8" value="1" oninput="calculateTotal(this)">
-                            <div class="absolute inset-y-0 right-0 flex flex-col items-center justify-center h-full">
-                                <button class="q-up p-1 bg-gray-300 rounded-t flex items-center justify-center w-8 h-1/2" onclick="incrementQty(this)">
-                                    <i class="msr">arrow_drop_up</i>
-                                </button>
-                                <button class="q-down p-1 bg-gray-300 rounded-b flex items-center justify-center w-8 h-1/2" onclick="decrementQty(this)">
-                                    <i class="msr">arrow_drop_down</i>
-                                </button>
-                            </div>
+            newRow.innerHTML = `
+                <div class="col-span-1 flex items-center justify-center">
+                    <span>${rowCount}</span>
+                </div>
+                <div class="col-span-5 flex items-center justify-center">
+                    <input type="text" placeholder="Scan / search products by code / name" class="border border-gray-300 rounded w-full text-left">
+                </div>
+                <div class="col-span-1 flex items-center justify-center">
+                    <input type="text" class="unit border border-gray-300 rounded w-full text-center">
+                </div>
+                <div class="col-span-1 flex items-center justify-center">
+                    <input type="text" class="unit-price border border-gray-300 rounded w-full text-center" oninput="calculateTotal(this)">
+                </div>
+                <div class="col-span-1 flex items-center justify-center">
+                    <div class="relative">
+                        <input type="number" class="q-input border border-gray-300 rounded w-20 text-center pr-8" value="1" oninput="calculateTotal(this)">
+                        <div class="absolute inset-y-0 right-0 flex flex-col items-center justify-center h-full">
+                            <button type="button" class="q-up p-1 bg-gray-300 rounded-t flex items-center justify-center w-8 h-1/2" onclick="incrementQty(this)">
+                                <i class="msr">arrow_drop_up</i>
+                            </button>
+                            <button type="button" class="q-down p-1 bg-gray-300 rounded-b flex items-center justify-center w-8 h-1/2" onclick="decrementQty(this)">
+                                <i class="msr">arrow_drop_down</i>
+                            </button>
                         </div>
                     </div>
-                    <div class="col-span-2 flex items-center justify-center">
-                        <input type="text" class="total-price border border-gray-300 rounded w-full text-center" readonly>
-                    </div>
-                    <div class="col-span-1 flex items-center justify-center">
-                        <a href="javascript:void(0)" class="product-delete-btn flex items-center" onclick="removeRow(this)">
-                            <i class="msr">cancel</i>
-                        </a>
-                    </div>
-                `;
+                </div>
+                <div class="col-span-2 flex items-center justify-center">
+                    <input type="text" class="total-price border border-gray-300 rounded w-full text-center" readonly>
+                </div>
+                <div class="col-span-1 flex items-center justify-center">
+                    <a href="javascript:void(0)" class="product-delete-btn flex items-center" onclick="removeRow(this)">
+                        <i class="msr">cancel</i>
+                    </a>
+                </div>
+            `;
 
-                tableBody.appendChild(newRow);
+            tableBody.appendChild(newRow);
 
-                // Attach event listeners to new row inputs for real-time calculation
-                newRow.querySelectorAll('.unit-price, .q-input').forEach(input => {
-                    input.addEventListener('input', () => calculateTotal(input));
-                });
+            // Attach event listeners to new row inputs for real-time calculation
+            newRow.querySelectorAll('.unit-price, .q-input').forEach(input => {
+                input.addEventListener('input', () => calculateTotal(input));
+            });
 
-                // Recalculate totals for new rows
-                calculateGrandTotal();
-            }
+            // Recalculate totals for new rows
+            calculateGrandTotal();
+        }
 
-            // Function to remove a row
-            function removeRow(element) {
-                const row = element.closest('.grid');
-                row.remove();
-                calculateGrandTotal();
-            }
+        // Function to remove a row
+        function removeRow(element) {
+            const row = element.closest('.grid');
+            row.remove();
+            calculateGrandTotal();
+        }
 
-            // Function to increment quantity
-            function incrementQty(element) {
-                const input = element.closest('.relative').querySelector('.q-input');
-                input.value = parseInt(input.value) + 1;
-                calculateTotal(input);
-            }
+        // Function to increment quantity
+        function incrementQty(element) {
+            const input = element.closest('.relative').querySelector('.q-input');
+            input.value = parseInt(input.value) + 1;
+            calculateTotal(input);
+        }
 
-            // Function to decrement quantity
-            function decrementQty(element) {
-                const input = element.closest('.relative').querySelector('.q-input');
-                input.value = Math.max(1, parseInt(input.value) - 1);
-                calculateTotal(input);
-            }
+        // Function to decrement quantity
+        function decrementQty(element) {
+            const input = element.closest('.relative').querySelector('.q-input');
+            input.value = Math.max(1, parseInt(input.value) - 1);
+            calculateTotal(input);
+        }
 
-            // Function to calculate the total price for a row
-            function calculateTotal(element) {
-                const row = element.closest('.grid');
+        // Function to calculate the total price for a row
+        function calculateTotal(element) {
+            const row = element.closest('.grid');
+            const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
+            const quantity = parseInt(row.querySelector('.q-input').value) || 0;
+
+            const subtotal = unitPrice * quantity;
+
+            row.querySelector('.total-price').value = subtotal.toFixed(2);
+            calculateGrandTotal();
+        }
+
+        // Function to calculate the grand total for all rows
+        function calculateGrandTotal() {
+            let totalAmount = 0;
+            document.querySelectorAll('#productTableBody .grid').forEach(row => {
                 const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
                 const quantity = parseInt(row.querySelector('.q-input').value) || 0;
 
-                const subtotal = unitPrice * quantity;
+                totalAmount += unitPrice * quantity;
+            });
 
-                row.querySelector('.total-price').value = subtotal.toFixed(2);
-                calculateGrandTotal();
+            console.log('Total Amount: ', totalAmount);  // Debug statement
+
+            // Get the discount percentage and calculate the discount amount
+            const discountPercentageElem = document.getElementById('discountPercentage');
+            const shippingCostElem = document.getElementById('shippingCost');
+            const totalAmountElem = document.getElementById('totalAmount');
+            const grandTotalElem = document.getElementById('grandTotal');
+
+            if (discountPercentageElem && shippingCostElem && totalAmountElem && grandTotalElem) {
+                const discountPercentage = parseFloat(discountPercentageElem.value) || 0;
+                const totalDiscount = totalAmount * (discountPercentage / 100);
+
+                // Get the shipping cost and add it to the grand total
+                const shippingCost = parseFloat(shippingCostElem.value) || 0;
+                const grandTotal = totalAmount - totalDiscount + shippingCost;
+
+                totalAmountElem.innerText = `Rs${totalAmount.toFixed(2)}`;
+                grandTotalElem.innerText = `Rs${grandTotal.toFixed(2)}`;
+
+                console.log('Discount Percentage: ', discountPercentage);  // Debug statement
+                console.log('Total Discount: ', totalDiscount);  // Debug statement
+                console.log('Shipping Cost: ', shippingCost);  // Debug statement
+                console.log('Grand Total: ', grandTotal);  // Debug statement
             }
+        }
 
-            // Function to calculate the grand total for all rows
-            function calculateGrandTotal() {
-                let totalAmount = 0;
-                document.querySelectorAll('#productTableBody .grid').forEach(row => {
-                    const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
-                    const quantity = parseInt(row.querySelector('.q-input').value) || 0;
-
-                    totalAmount += unitPrice * quantity;
-                });
-
-                console.log('Total Amount: ', totalAmount);  // Debug statement
-
-                // Get the discount percentage and calculate the discount amount
-                const discountPercentageElem = document.getElementById('discountPercentage');
-                const shippingCostElem = document.getElementById('shippingCost');
-                const totalAmountElem = document.getElementById('totalAmount');
-                const grandTotalElem = document.getElementById('grandTotal');
-
-                if (discountPercentageElem && shippingCostElem && totalAmountElem && grandTotalElem) {
-                    const discountPercentage = parseFloat(discountPercentageElem.value) || 0;
-                    const totalDiscount = totalAmount * (discountPercentage / 100);
-
-                    // Get the shipping cost and add it to the grand total
-                    const shippingCost = parseFloat(shippingCostElem.value) || 0;
-                    const grandTotal = totalAmount - totalDiscount + shippingCost;
-
-                    totalAmountElem.innerText = Rs${totalAmount.toFixed(2)};
-                    grandTotalElem.innerText = Rs${grandTotal.toFixed(2)};
-
-                    console.log('Discount Percentage: ', discountPercentage);  // Debug statement
-                    console.log('Total Discount: ', totalDiscount);  // Debug statement
-                    console.log('Shipping Cost: ', shippingCost);  // Debug statement
-                    console.log('Grand Total: ', grandTotal);  // Debug statement
-                }
-            }
-
-            // Make functions available globally
-            window.addRow = addRow;
-            window.removeRow = removeRow;
-            window.incrementQty = incrementQty;
-            window.decrementQty = decrementQty;
-            window.calculateTotal = calculateTotal;
-
+        document.addEventListener('DOMContentLoaded', function() {
             // Add initial row
             addRow();
 
@@ -286,3 +279,4 @@
         });
     </script>
 @endpush
+
