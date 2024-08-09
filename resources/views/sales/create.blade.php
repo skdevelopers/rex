@@ -28,7 +28,7 @@
         </style>
     @endpush
     <div class="cashier-content-area mt-7">
-        <div class="cashier-addsale-area bg-white p-7 custom-shadow rounded-lg mb-5">
+        <div class="cashier-addsale-area bg-white p-6 custom-shadow rounded-lg mb-5">
             <h4 class="text-[20px] font-bold text-heading mb-11 text-blue-500">Customer Bill</h4>
             <form action="{{ route('sales.create') }}" method="post">
                 @csrf
