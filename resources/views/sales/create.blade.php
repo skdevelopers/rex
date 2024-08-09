@@ -111,11 +111,11 @@
                             </li>
                             <li class="px-4 py-2.5 border-b border-solid border-gray-300">
                                 <span class="text-[15px] font-normal text-heading w-40 inline-block">Discount (%) <span class="float-right">:</span></span>
-                                <input type="number" id="discountPercentage" placeholder="0" class="h-8 w-16 bg-gray-00">
+                                <input type="number" id="discountPercentage" placeholder="0.00" class="h-8 w-16 bg-gray-200 border-none">
                             </li>
                             <li class="px-4 py-2.5 border-b border-solid border-gray-300 bg-gray-200">
                                 <span class="text-[15px] font-normal text-heading w-40 inline-block">Shipping <span class="float-right">:</span></span>
-                                <input type="text" id="shippingCost" placeholder="0.00" class="h-8 w-16 bg-gray-00">
+                                <input type="text" id="shippingCost" placeholder="0.00" class="h-8 w-16 bg-gray-100 border-none">
                             </li>
                             <li class="px-4 py-2.5">
                                 <span class="text-[15px] font-bold text-heading w-40 inline-block">Grand Total <span class="float-right font-normal">:</span></span>
