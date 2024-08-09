@@ -141,7 +141,8 @@
             </form>
         </div>
     </div>
-
+@endsection
+@push('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             let rowCount = 0;
@@ -284,4 +285,4 @@
             document.getElementById('discountPercentage').addEventListener('input', calculateGrandTotal);
         });
     </script>
-@endsection
+@endpush
