@@ -1,32 +1,32 @@
 @extends('layouts.vertical', ['title' => 'add Sale', 'sub_title' => 'Sale', 'mode' => $mode ?? '', 'demo' => $demo ?? ''])
+@push('styles')
+    <style>
+        .q-up,
+        .q-down {
+            width: 24px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+        }
 
+        .q-up:hover,
+        .q-down:hover {
+            background-color: #d1d5db; /* Tailwind CSS gray-400 */
+        }
+
+        .q-input::-webkit-outer-spin-button,
+        .q-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .q-input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+@endpush
 @section('content')
-    @push('styles')
-        <style>
-            .q-up,
-            .q-down {
-                width: 24px;
-                text-align: center;
-                cursor: pointer;
-                user-select: none;
-            }
 
-            .q-up:hover,
-            .q-down:hover {
-                background-color: #d1d5db; /* Tailwind CSS gray-400 */
-            }
-
-            .q-input::-webkit-outer-spin-button,
-            .q-input::-webkit-inner-spin-button {
-                -webkit-appearance: none;
-                margin: 0;
-            }
-
-            .q-input[type=number] {
-                -moz-appearance: textfield;
-            }
-        </style>
-    @endpush
     <div class="cashier-content-area mt-7">
         <div class="cashier-addsale-area bg-white p-6 custom-shadow rounded-lg mb-5">
             <h4 class="text-[20px] font-bold text-heading mb-11 text-blue-500">Customer Bill</h4>
