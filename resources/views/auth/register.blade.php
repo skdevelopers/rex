@@ -17,7 +17,7 @@
         <div class="2xl:w-1/4 lg:w-1/3 md:w-1/2 w-full">
             <div class="card overflow-hidden sm:rounded-md rounded-none">
                 <div class="p-6">
-                    <a href="{{ route('any', 'index') }}}" class="block mb-8">
+                    <a href="{{ route('home') }}}" class="block mb-8">
                         <img class="h-6 block dark:hidden" src="/images/logo-dark.png" alt="">
                         <img class="h-6 hidden dark:block" src="/images/logo-light.png" alt="">
                     </a>
@@ -81,7 +81,7 @@
                     </div>
 
                     <p class="text-gray-500 dark:text-gray-400 text-center">Already have account ?<a
-                            href="{{ route('second', ['auth', 'login']) }}" class="text-primary ms-1"><b>Log In</b></a>
+                            href="{{ route('login') }}" class="text-primary ms-1"><b>Log In</b></a>
                     </p>
                 </div>
             </div>
