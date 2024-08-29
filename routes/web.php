@@ -28,7 +28,7 @@ require __DIR__ . '/auth.php';
 //    Route::get('/{any}', function () {
 //        return view('login');
 //    })->where('any', '.*');
-// routes/web.php
+
 
 Route::get('/map', function () {
     return view('map');

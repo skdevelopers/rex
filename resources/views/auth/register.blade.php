@@ -98,8 +98,8 @@
                         </a>
                     </div>
 
-                    <p class="text-gray-500 dark:text-gray-400 text-center">Already have an account? <a
-                            href="{{ route('login') }}" class="text-primary ms-1"><b>Log In</b></a>
+                    <p class="text-gray-500 dark:text-gray-400 text-center">Already have account ?<a
+                            href="{{ route('second', ['auth', 'login']) }}" class="text-primary ms-1"><b>Log In</b></a>
                     </p>
                 </div>
             </div>
