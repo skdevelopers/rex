@@ -1,17 +1,15 @@
-<!-- edit.blade.php -->
-
-@extends('layouts.vertical', ['title' => 'Edit Role'])
+@extends('layouts.vertical', ['title' => 'Edit Role', 'sub_title' => 'Roles'])
 
 @section('content')
-    <div>
-        <h1>Edit Role</h1>
-        <form method="post" action="{{ route('roles.update', $role->id) }}">
-            @csrf
-            @method('PUT')
 
-            @include('roles._form')
-
-            <button type="submit">Update Role</button>
-        </form>
-    </div>
+    <h1>Assign Roles to {{ $user->name }}</h1>
+    <form action="{{ route('users.roles.update', $user->id) }}" method="POST">
+        @csrf
+        @foreach($roles as $role)
+            <input type="checkbox" name="roles[]" value="{{ $role->id }}" 
+            {{ $user->roles->contains($role->id) ? 'checked' : '' }}>
+            {{ $role->name }}<br>
+        @endforeach
+        <button type="submit">Update Roles</button>
+    </form>
 @endsection

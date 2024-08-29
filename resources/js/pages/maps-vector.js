@@ -9,15 +9,15 @@ File: vector map js
 import jsVectorMap from "jsvectormap";
 
 window.jsVectorMap = jsVectorMap;
-import "jsvectormap/dist/maps/canada.js"
-import "jsvectormap/dist/maps/iraq.js"
-import "jsvectormap/dist/maps/italy.js"
-import "jsvectormap/dist/maps/russia.js"
-import "jsvectormap/dist/maps/spain.js"
-import "jsvectormap/dist/maps/us-aea-en.js"
-import "jsvectormap/dist/maps/us-lcc-en.js"
-import "jsvectormap/dist/maps/us-mill-en.js"
-import "jsvectormap/dist/maps/world-merc.js"
+// import "jsvectormap/dist/maps/canada.js"
+// import "jsvectormap/dist/maps/iraq.js"
+// import "jsvectormap/dist/maps/italy.js"
+// import "jsvectormap/dist/maps/russia.js"
+// import "jsvectormap/dist/maps/spain.js"
+// import "jsvectormap/dist/maps/us-aea-en.js"
+// import "jsvectormap/dist/maps/us-lcc-en.js"
+// import "jsvectormap/dist/maps/us-mill-en.js"
+// import "jsvectormap/dist/maps/world-merc.js"
 
 document.addEventListener('DOMContentLoaded', function () {
 
