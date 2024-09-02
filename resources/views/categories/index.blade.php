@@ -32,10 +32,12 @@
                                         class="text-blue-500 hover:text-blue-700 mx-0.5">
                                     <i class="mgc_expand_line text-lg"></i> View Subcategories
                                 </button>
+                               
                                 <a href="{{ route('categories.edit', $category->id) }}"
                                    class="text-blue-500 hover:text-blue-700 mx-0.5">
                                     <i class="mgc_edit_line text-lg"></i>
                                 </a>
+                                
                                 <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
@@ -44,6 +46,7 @@
                                         <i class="mgc_delete_line text-xl"></i>
                                     </button>
                                 </form>
+                              
                             </td>
                         </tr>
                         <tr>

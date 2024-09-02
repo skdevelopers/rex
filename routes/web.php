@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserRolePermissionController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoutingController;
 
 /*
@@ -35,15 +36,18 @@ Route::get('/map', function () {
 });
 
 
+
+Route::resource('users', UserController::class);
+
 Route::resource('roles', RoleController::class);
 Route::resource('permissions', PermissionController::class);
 
 // Routes for assigning roles and permissions to users
-Route::get('users/{user}/roles', [UserRolePermissionController::class, 'editRoles'])->name('users.roles.edit');
-Route::post('users/{user}/roles', [UserRolePermissionController::class, 'updateRoles'])->name('users.roles.update');
+Route::get('users/{user}/roles', [UserRolePermissionController::class, 'editRoles'])->name('users.edit-roles');
+Route::put('users/{user}/roles', [UserRolePermissionController::class, 'updateRoles'])->name('users.update-roles');
 
-Route::get('users/{user}/permissions', [UserRolePermissionController::class, 'editPermissions'])->name('users.permissions.edit');
-Route::post('users/{user}/permissions', [UserRolePermissionController::class, 'updatePermissions'])->name('users.permissions.update');
+Route::get('users/{user}/permissions', [UserRolePermissionController::class, 'editPermissions'])->name('users.edit-permissions');
+Route::put('users/{user}/permissions', [UserRolePermissionController::class, 'updatePermissions'])->name('users.update-permissions');
 
 // Resource routes for managing permissions
     // Route::resource('permissions', PermissionController::class)->names([
@@ -59,7 +63,10 @@ Route::post('users/{user}/permissions', [UserRolePermissionController::class, 'u
 Route::get('/categories/{category}/subcategories', [CategoryController::class, 'getSubcategories']);
 Route::get('/subcategories/{subcategory}/subsubcategories', [CategoryController::class, 'getSubSubcategories']);
 
-Route::resource('categories', CategoryController::class)->middleware('auth');
+Route::middleware(['check.permissions'])->group(function () {
+Route::resource('categories', CategoryController::class);
+});
+
 //Route::resource('roles', RoleController::class)->middleware('auth');
 Route::resource('customers', CustomerController::class)->middleware('auth');
 Route::resource('cash-flows', CashFlowController::class)->middleware('auth');
