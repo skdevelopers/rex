@@ -48,7 +48,7 @@ class MakeViewsCommand extends Command
      * @param string $view
      * @return void
      */
-    protected function createView($name, $view)
+    protected function createView($name, $view): void
     {
         $directory = resource_path("views/{$name}");
 
