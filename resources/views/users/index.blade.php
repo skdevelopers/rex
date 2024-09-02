@@ -29,7 +29,7 @@
                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                         <a href="{{ route('users.edit', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
                         <a href="{{ route('users.edit-roles', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit Roles</a>
-                        <a href="{{ route('users.edit-permissions', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit Permissions</a>
+                        {{-- <a href="{{ route('users.edit-permissions', $user->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit Permissions</a> --}}
                         <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Are you sure you want to delete this user?');">
                             @csrf
                             @method('DELETE')

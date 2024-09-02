@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -30,5 +31,16 @@ class UserRolePermissionController extends Controller
     {
         $user->syncPermissions($request->permissions);
         return redirect()->route('users.index')->with('success', 'User permissions updated successfully.');
+    }
+    public function assignPermissionsToRole(Role $role)
+    {
+        $permissions = Permission::all();
+        return view('roles.assign_permissions', compact('role', 'permissions'));
+    }
+
+    public function updatePermissionsForRole(Request $request, Role $role)
+    {
+        $role->syncPermissions($request->permissions);
+        return redirect()->route('roles.index')->with('success', 'Permissions assigned to role successfully.');
     }
 }

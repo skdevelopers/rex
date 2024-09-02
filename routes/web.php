@@ -37,8 +37,9 @@ Route::get('/map', function () {
 
 
 
-Route::resource('users', UserController::class);
 
+Route::get('roles/{role}/permissions/edit', [UserRolePermissionController::class, 'assignPermissionsToRole'])->name('roles.permissions.edit');
+Route::post('roles/{role}/permissions/update', [UserRolePermissionController::class, 'updatePermissionsForRole'])->name('roles.permissions.update');
 Route::resource('roles', RoleController::class);
 Route::resource('permissions', PermissionController::class);
 
@@ -50,21 +51,22 @@ Route::get('users/{user}/permissions', [UserRolePermissionController::class, 'ed
 Route::put('users/{user}/permissions', [UserRolePermissionController::class, 'updatePermissions'])->name('users.update-permissions');
 
 // Resource routes for managing permissions
-    // Route::resource('permissions', PermissionController::class)->names([
-    //     'index' => 'permissions.index',
-    //     'create' => 'permissions.create',
-    //     'store' => 'permissions.store',
-    //     'show' => 'permissions.show',
-    //     'edit' => 'permissions.edit', // This line is important for generating the edit route
-    //     'update' => 'permissions.update',
-    //     'destroy' => 'permissions.destroy',
-    // ])->middleware('auth');
+// Route::resource('permissions', PermissionController::class)->names([
+//     'index' => 'permissions.index',
+//     'create' => 'permissions.create',
+//     'store' => 'permissions.store',
+//     'show' => 'permissions.show',
+//     'edit' => 'permissions.edit', // This line is important for generating the edit route
+//     'update' => 'permissions.update',
+//     'destroy' => 'permissions.destroy',
+// ])->middleware('auth');
 
 Route::get('/categories/{category}/subcategories', [CategoryController::class, 'getSubcategories']);
 Route::get('/subcategories/{subcategory}/subsubcategories', [CategoryController::class, 'getSubSubcategories']);
 
 Route::middleware(['check.permissions'])->group(function () {
-Route::resource('categories', CategoryController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('categories', CategoryController::class);
 });
 
 //Route::resource('roles', RoleController::class)->middleware('auth');
@@ -171,4 +173,3 @@ Route::get('/maps/google', fn() => view('maps.google'))->name('maps.google');
   // Route::get('{first}/{second}', [RoutingController::class, 'secondLevel'])->name('second');
   // Route::get('{any}', [RoutingController::class, 'root'])->name('any');
 //});
-
