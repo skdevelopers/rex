@@ -2,15 +2,13 @@
 <html lang="en">
 
 <head>
-  @include('layouts.shared/title-meta', ['title' => "Login"])
-
-  @include('layouts.shared/head-css')
+  @include('layouts.shared.title-meta', ['title' => "Login"])
+  @include('layouts.shared.head-css')
 </head>
 
 <body>
 
 <div class="bg-gradient-to-r from-rose-100 to-teal-100 dark:from-gray-700 dark:via-gray-900 dark:to-black">
-
 
   <div class="h-screen w-screen flex justify-center items-center">
 
@@ -22,21 +20,40 @@
             <img class="h-6 hidden dark:block" src="{{ asset('/images/logo-light.png') }}" alt="light-logo">
           </a>
 
+          <!-- Error Message Section -->
+          @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+              <strong class="font-bold">Whoops!</strong>
+              <span class="block sm:inline">There were some problems with your input.</span>
+              <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+            </div>
+          @endif
+
           <form method="POST" action="{{ route('login') }}">
             @csrf
 
             <div class="mb-4">
               <label class="block text-sm font-medium text-gray-600 dark:text-gray-200 mb-2"
                      for="LoggingEmailAddress">Email Address</label>
-              <input id="LoggingEmailAddress" class="form-input" type="email"
-                     placeholder="Enter your email" value="" name="email">
+              <input id="LoggingEmailAddress" class="form-input @error('email') border-red-500 @enderror" 
+                     type="email" placeholder="Enter your email" value="{{ old('email') }}" name="email">
+              @error('email')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="mb-4">
               <label class="block text-sm font-medium text-gray-600 dark:text-gray-200 mb-2"
                      for="loggingPassword">Password</label>
-              <input id="loggingPassword" class="form-input" type="password"
-                     placeholder="Enter your password" value="" name="password">
+              <input id="loggingPassword" class="form-input @error('password') border-red-500 @enderror" 
+                     type="password" placeholder="Enter your password" name="password">
+              @error('password')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+              @enderror
             </div>
 
             <div class="flex items-center justify-between mb-4">
@@ -45,7 +62,7 @@
                 <label class="ms-2" for="checkbox-signin">Remember me</label>
               </div>
               <a href="{{ route('auth.recoverpw') }}"
-                 class="text-sm text-primary border-b border-dashed border-primary">Forget Password ?</a>
+                 class="text-sm text-primary border-b border-dashed border-primary">Forget Password?</a>
             </div>
 
             <div class="flex justify-center mb-6">
@@ -61,26 +78,26 @@
 
           <div class="flex gap-4 justify-center mb-6">
             <a href="javascript:void(0)" class="btn border-light text-gray-400 dark:border-slate-700">
-                                <span class="flex justify-center items-center gap-2">
-                                    <i class="mgc_github_line text-info text-xl"></i>
-                                    <span class="lg:block hidden">Github</span>
-                                </span>
+              <span class="flex justify-center items-center gap-2">
+                <i class="mgc_github_line text-info text-xl"></i>
+                <span class="lg:block hidden">Github</span>
+              </span>
             </a>
             <a href="javascript:void(0)" class="btn border-light text-gray-400 dark:border-slate-700">
-                                <span class="flex justify-center items-center gap-2">
-                                    <i class="mgc_google_line text-danger text-xl"></i>
-                                    <span class="lg:block hidden">Google</span>
-                                </span>
+              <span class="flex justify-center items-center gap-2">
+                <i class="mgc_google_line text-danger text-xl"></i>
+                <span class="lg:block hidden">Google</span>
+              </span>
             </a>
             <a href="javascript:void(0)" class="btn border-light text-gray-400 dark:border-slate-700">
-                                <span class="flex justify-center items-center gap-2">
-                                    <i class="mgc_facebook_line text-primary text-xl"></i>
-                                    <span class="lg:block hidden">Facebook</span>
-                                </span>
+              <span class="flex justify-center items-center gap-2">
+                <i class="mgc_facebook_line text-primary text-xl"></i>
+                <span class="lg:block hidden">Facebook</span>
+              </span>
             </a>
           </div>
 
-          <p class="text-gray-500 dark:text-gray-400 text-center">Don't have an account ?<a
+          <p class="text-gray-500 dark:text-gray-400 text-center">Don't have an account?<a
                     href="{{ route('auth.register') }}" class="text-primary ms-1"><b>Register</b></a>
           </p>
         </div>

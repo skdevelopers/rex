@@ -1,6 +1,5 @@
 @extends('layouts.vertical', ['title' => '', 'sub_title' => ''])
 
-@extends('layouts.app')
 
 @section('content')
 <div class="max-w-7xl mx-auto py-8">

@@ -26,7 +26,7 @@ class CheckPermissions
 
         // Formulate the permission name
         $permissionName = "{$model}_{$operation}";
-        dd(Auth::user()->roles);
+       // dd(Auth::user()->roles);
         // Check if the user has the permission
         if (!Auth::user()->hasRole('admin')) {
             if (!Auth::user()->can($permissionName)) {

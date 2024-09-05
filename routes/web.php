@@ -13,6 +13,7 @@ use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserRolePermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoutingController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -89,7 +90,7 @@ Route::prefix('/api/')->group(function () {
 });
 
 Route::get('/', fn() => redirect('/login'));
-Route::get('/home', fn() => view('index'))->name('home');
+Route::get('/home', fn() => view('index'))->name('home')->middleware('auth');
 Route::get('/charts', fn() => view('charts'))->name('charts');
 Route::get('/apps/calendar', fn() => view('apps.calender'))->name('apps.calendar');
 Route::get('/apps/tickets', fn() => view('apps.tickets'))->name('apps.tickets');
@@ -98,7 +99,9 @@ Route::get('/apps/kanban', fn() => view('apps.kanban'))->name('apps.kanban');
 Route::get('/project/list', fn() => view('project.list'))->name('project.list');
 Route::get('/project/detail', fn() => view('project.detail'))->name('project.detail');
 Route::get('/project/create', fn() => view('project.create'))->name('project.create');
-Route::get('/auth/login', fn() => view('auth.login'))->name('auth.login');
+Route::get('/auth/login', fn() => view('auth.login'))->name('login');
+Route::post('/auth/login', [AuthenticatedSessionController::class, 'create'])->name('auth.login');
+Route::delete('/auth/logout', [AuthenticatedSessionController::class, 'logout'])->name('auth.logout');
 Route::get('/auth/register', fn() => view('auth.register'))->name('auth.register');
 Route::get('/auth/auth.recoverpw', fn() => view('auth.recoverpw'))->name('auth.recoverpw');
 Route::get('/auth/lock-screen', fn() => view('auth.lock-screen'))->name('auth.lock-screen');

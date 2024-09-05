@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthenticatedSessionController extends Controller
 {
+
+    
     /**
      * Display the login view.
      *
@@ -47,6 +49,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
+       
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
@@ -62,8 +65,9 @@ class AuthenticatedSessionController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function login(Request $request): JsonResponse
+    public function login(Request $request)
     {
+         //dd($request);       
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string|min:6',
@@ -75,12 +79,13 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
+        return redirect(RouteServiceProvider::HOME);
 
-        return response()->json([
-            'message' => 'Login successful',
-            'token' => $token,
-            'user' => $user,
-        ], 200);
+        // return response()->json([
+        //     'message' => 'Login successful',
+        //     'token' => $token,
+        //     'user' => $user,
+        // ], 200);
     }
 
     /**
@@ -89,13 +94,14 @@ class AuthenticatedSessionController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function logout(Request $request): JsonResponse
+    public function logout(Request $request)
     {
+        //dd("hello");
         $request->user()->tokens()->delete();
-
-        return response()->json([
-            'message' => 'Logout successful',
-        ], 200);
+        return view('auth.login');
+        // return response()->json([
+        //     'message' => 'Logout successful',
+        // ], 200);
     }
 
     /**
