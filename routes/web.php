@@ -122,3 +122,4 @@ Route::get('/layouts-eg/hover-view', function () {
 Route::view('/layouts-eg/icon-view', 'layouts-eg.icon-view')->name('layouts-eg.icon-view');
 Route::view('/layouts-eg/compact-view', 'layouts-eg.compact-view')->name('layouts-eg.compact-view');
 Route::view('/layouts-eg/mobile-view', 'layouts-eg.mobile-view')->name('layouts-eg.mobile-view');
+Route::view('/layouts-eg/hidden-view', 'layouts-eg.hidden-view')->name('layouts-eg.hidden-view');
