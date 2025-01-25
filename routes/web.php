@@ -36,8 +36,11 @@ Route::get('/home', fn() => view('index'))->name('home')->middleware('auth');
 Route::prefix('roles')->group(function () {
     Route::get('{role}/permissions/edit', [UserRolePermissionController::class, 'assignPermissionsToRole'])->name('roles.permissions.edit');
     Route::post('{role}/permissions/update', [UserRolePermissionController::class, 'updatePermissionsForRole'])->name('roles.permissions.update');
-    Route::resource('/', RoleController::class)->except(['show']);
 });
+
+// Register RoleController routes outside the prefix
+Route::resource('roles', RoleController::class)->except(['show']);
+
 Route::resource('permissions', PermissionController::class)->except(['show']);
 
 // User Role and Permission Assignment
