@@ -7,13 +7,13 @@
     },
     "devDependencies": {
         "autoprefixer": "^10.4.17",
-        "axios": "^1.6.8",
+        "axios": "1.7.4",
         "laravel-vite-plugin": "^1.0.1",
         "postcss": "^8.4.35",
         "sass": "^1.70.0",
         "sass-loader": "^14.1.0",
         "tailwindcss": "^3.4.1",
-        "vite": "^5.4.2"
+        "vite": "5.4.6"
     },
     "dependencies": {
         "@frostui/tailwindcss": "^0.1.5",
@@ -39,13 +39,13 @@
         "plyr": "^3.7.8",
         "prismjs": "^1.29.0",
         "pristinejs": "^1.1.0",
-        "quill": "^1.3.7",
+        "quill": "^2.0.3",
         "rater-js": "^1.0.1",
         "shepherd.js": "^11.2.0",
         "shufflejs": "^6.1.0",
         "simplebar": "^6.2.5",
         "sortablejs": "^1.15.2",
-        "sweetalert2": "^11.10.5",
+        "sweetalert2": "^11.6.13",
         "swiper": "^11.0.6",
         "tippy.js": "6.3.7",
         "wnumb": "^1.2.0"

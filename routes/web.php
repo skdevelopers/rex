@@ -1,178 +1,115 @@
 <?php
 
-use App\Http\Controllers\CashFlowController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\SalesController;
-use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\UserRolePermissionController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\RoutingController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\{
+    CashFlowController,
+    CategoryController,
+    CustomerController,
+    ProductController,
+    SalesController,
+    SupplierController,
+    UploadController,
+    RoleController,
+    PermissionController,
+    UserRolePermissionController,
+    UserController,
+    Auth\AuthenticatedSessionController
+};
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
+| Define all web routes for your application here.
+| These routes are loaded by the RouteServiceProvider and belong
+| to the "web" middleware group.
+|--------------------------------------------------------------------------
 */
 
+// Authentication routes
 require __DIR__ . '/auth.php';
-//    Route::get('/{any}', function () {
-//        return view('login');
-//    })->where('any', '.*');
 
+Route::get('/', fn() => redirect('/login'));
+Route::get('/home', fn() => view('index'))->name('home')->middleware('auth');
 
-Route::get('/map', function () {
-    return view('map');
+// Role and Permission Management
+Route::prefix('roles')->group(function () {
+    Route::get('{role}/permissions/edit', [UserRolePermissionController::class, 'assignPermissionsToRole'])->name('roles.permissions.edit');
+    Route::post('{role}/permissions/update', [UserRolePermissionController::class, 'updatePermissionsForRole'])->name('roles.permissions.update');
+    Route::resource('/', RoleController::class)->except(['show']);
+});
+Route::resource('permissions', PermissionController::class)->except(['show']);
+
+// User Role and Permission Assignment
+Route::prefix('users')->group(function () {
+    Route::get('{user}/roles', [UserRolePermissionController::class, 'editRoles'])->name('users.edit-roles');
+    Route::put('{user}/roles', [UserRolePermissionController::class, 'updateRoles'])->name('users.update-roles');
+    Route::get('{user}/permissions', [UserRolePermissionController::class, 'editPermissions'])->name('users.edit-permissions');
+    Route::put('{user}/permissions', [UserRolePermissionController::class, 'updatePermissions'])->name('users.update-permissions');
+});
+Route::resource('users', UserController::class)->middleware(['check.permissions']);
+
+// Category Hierarchy Routes
+Route::get('categories/{category}/subcategories', [CategoryController::class, 'getSubcategories']);
+Route::get('subcategories/{subcategory}/subsubcategories', [CategoryController::class, 'getSubSubcategories']);
+Route::resource('categories', CategoryController::class)->middleware(['check.permissions']);
+
+// Resource Management
+Route::middleware('auth')->group(function () {
+    Route::resource('customers', CustomerController::class);
+    Route::resource('cash-flows', CashFlowController::class);
+    Route::resource('products', ProductController::class);
+    Route::resource('sales', SalesController::class);
+    Route::resource('suppliers', SupplierController::class);
 });
 
-
-
-
-Route::get('roles/{role}/permissions/edit', [UserRolePermissionController::class, 'assignPermissionsToRole'])->name('roles.permissions.edit');
-Route::post('roles/{role}/permissions/update', [UserRolePermissionController::class, 'updatePermissionsForRole'])->name('roles.permissions.update');
-Route::resource('roles', RoleController::class);
-Route::resource('permissions', PermissionController::class);
-
-// Routes for assigning roles and permissions to users
-Route::get('users/{user}/roles', [UserRolePermissionController::class, 'editRoles'])->name('users.edit-roles');
-Route::put('users/{user}/roles', [UserRolePermissionController::class, 'updateRoles'])->name('users.update-roles');
-
-Route::get('users/{user}/permissions', [UserRolePermissionController::class, 'editPermissions'])->name('users.edit-permissions');
-Route::put('users/{user}/permissions', [UserRolePermissionController::class, 'updatePermissions'])->name('users.update-permissions');
-
-// Resource routes for managing permissions
-// Route::resource('permissions', PermissionController::class)->names([
-//     'index' => 'permissions.index',
-//     'create' => 'permissions.create',
-//     'store' => 'permissions.store',
-//     'show' => 'permissions.show',
-//     'edit' => 'permissions.edit', // This line is important for generating the edit route
-//     'update' => 'permissions.update',
-//     'destroy' => 'permissions.destroy',
-// ])->middleware('auth');
-
-Route::get('/categories/{category}/subcategories', [CategoryController::class, 'getSubcategories']);
-Route::get('/subcategories/{subcategory}/subsubcategories', [CategoryController::class, 'getSubSubcategories']);
-
-Route::middleware(['check.permissions'])->group(function () {
-    Route::resource('users', UserController::class);
-    Route::resource('categories', CategoryController::class);
-});
-
-//Route::resource('roles', RoleController::class)->middleware('auth');
-Route::resource('customers', CustomerController::class)->middleware('auth');
-Route::resource('cash-flows', CashFlowController::class)->middleware('auth');
-Route::resource('products', ProductController::class)->middleware('auth');
-Route::resource('sales', SalesController::class)->middleware('auth');
-Route::resource('suppliers', SupplierController::class)->middleware('auth');
+// Media Upload
 Route::post('/upload-media', [UploadController::class, 'upload'])->name('upload-media');
 Route::delete('/delete-media/{media}', [UploadController::class, 'delete'])->name('delete-media');
 
-//// Define specific routes for data retrieval
-Route::prefix('/api/')->group(function () {
+// API Routes
+Route::prefix('api')->group(function () {
     Route::get('customers', [CustomerController::class, 'indexJson'])->name('api.customers.index');
     Route::get('suppliers', [SupplierController::class, 'indexJson'])->name('api.suppliers.index');
     Route::get('cash-flows', [CashFlowController::class, 'indexJson'])->name('api.cash-flows.index');
     Route::get('products', [ProductController::class, 'indexJson'])->name('api.products.index');
-
-    // Add more API routes as needed
 });
 
-Route::get('/', fn() => redirect('/login'));
-Route::get('/home', fn() => view('index'))->name('home')->middleware('auth');
-Route::get('/charts', fn() => view('charts'))->name('charts');
-Route::get('/apps/calendar', fn() => view('apps.calender'))->name('apps.calendar');
-Route::get('/apps/tickets', fn() => view('apps.tickets'))->name('apps.tickets');
-Route::get('/apps/file-manager', fn() => view('apps.file-manager'))->name('apps.file-manager');
-Route::get('/apps/kanban', fn() => view('apps.kanban'))->name('apps.kanban');
-Route::get('/project/list', fn() => view('project.list'))->name('project.list');
-Route::get('/project/detail', fn() => view('project.detail'))->name('project.detail');
-Route::get('/project/create', fn() => view('project.create'))->name('project.create');
-Route::get('/auth/login', fn() => view('auth.login'))->name('login');
-Route::post('/auth/login', [AuthenticatedSessionController::class, 'create'])->name('auth.login');
-Route::delete('/auth/logout', [AuthenticatedSessionController::class, 'logout'])->name('auth.logout');
-Route::get('/auth/register', fn() => view('auth.register'))->name('auth.register');
-Route::get('/auth/auth.recoverpw', fn() => view('auth.recoverpw'))->name('auth.recoverpw');
-Route::get('/auth/lock-screen', fn() => view('auth.lock-screen'))->name('auth.lock-screen');
-Route::get('/pages/starter', fn() => view('pages.starter'))->name('pages.starter');
-Route::get('/pages/timeline', fn() => view('pages.timeline'))->name('pages.timeline');
-Route::get('/pages/invoice', fn() => view('pages.invoice'))->name('pages.invoice');
-Route::get('/pages/gallery', fn() => view('pages.gallery'))->name('pages.gallery');
-Route::get('/pages/faqs', fn() => view('pages.faqs'))->name('pages.faqs');
-Route::get('/pages/pricing', fn() => view('pages.pricing'))->name('pages.pricing');
-Route::get('/pages/maintenance', fn() => view('pages.maintenance'))->name('pages.maintenance');
-Route::get('/pages/coming-soon', fn() => view('pages.coming-soon'))->name('pages.coming-soon');
-Route::get('/pages/404', fn() => view('pages.404'))->name('pages.404');
-Route::get('/pages/404-alt', fn() => view('pages.404-alt'))->name('pages.404-alt');
-Route::get('/pages/500', fn() => view('pages.500'))->name('pages.500');
-Route::get('/layouts-eg/hover-view', fn() => view('layouts-eg.hover-view'))->name('layouts-eg.hover-view');
-Route::get('/layouts-eg/icon-view', fn() => view('layouts-eg.icon-view'))->name('layouts-eg.icon-view');
-Route::get('/layouts-eg/compact-view', fn() => view('layouts-eg.compact-view'))->name('layouts-eg.compact-view');
-Route::get('/layouts-eg/mobile-view', fn() => view('layouts-eg.mobile-view'))->name('layouts-eg.mobile-view');
-Route::get('/layouts-eg/hidden-view', fn() => view('layouts-eg.hidden-view'))->name('layouts-eg.hidden-view');
-Route::get('/ui/accordions', fn() => view('ui.accordions'))->name('ui.accordions');
-Route::get('/ui/alerts', fn() => view('ui.alerts'))->name('ui.alerts');
-Route::get('/ui/avatars', fn() => view('ui.avatars'))->name('ui.avatars');
-Route::get('/ui/buttons', fn() => view('ui.buttons'))->name('ui.buttons');
-Route::get('/ui/badges', fn() => view('ui.badges'))->name('ui.badges');
-Route::get('/ui/breadcrumbs', fn() => view('ui.badges'))->name('ui.breadcrumbs');
-Route::get('/ui/cards', fn() => view('ui.cards'))->name('ui.cards');
-Route::get('/ui/collapse', fn() => view('ui.collapse'))->name('ui.collapse');
-Route::get('/ui/dismissible', fn() => view('ui.dismissible'))->name('ui.dismissible');
-Route::get('/ui/dropdowns', fn() => view('ui.dropdowns'))->name('ui.dropdowns');
-Route::get('/ui/progress', fn() => view('ui.progress'))->name('ui.progress');
-Route::get('/ui/skeleton', fn() => view('ui.skeleton'))->name('ui.skeleton');
-Route::get('/ui/spinners', fn() => view('ui.spinners'))->name('ui.spinners');
-Route::get('/ui/list-group', fn() => view('ui.list-group'))->name('ui.list-group');
-Route::get('/ui/ratio', fn() => view('ui.ratio'))->name('ui.ratio');
-Route::get('/ui/tabs', fn() => view('ui.tabs'))->name('ui.tabs');
-Route::get('/ui/modals', fn() => view('ui.modals'))->name('ui.modals');
-Route::get('/ui/offcanvas', fn() => view('ui.offcanvas'))->name('ui.offcanvas');
-Route::get('/ui/popovers', fn() => view('ui.popovers'))->name('ui.popovers');
-Route::get('/ui/tooltips', fn() => view('ui.tooltips'))->name('ui.tooltips');
-Route::get('/ui/typography', fn() => view('ui.typography'))->name('ui.typography');
-Route::get('/extended/swiper', fn() => view('extended.swiper'))->name('extended.swiper');
-Route::get('/extended/nestable', fn() => view('extended.nestable'))->name('extended.nestable');
-Route::get('/extended/ratings', fn() => view('extended.ratings'))->name('extended.ratings');
-Route::get('/extended/animation', fn() => view('extended.animation'))->name('extended.animation');
-Route::get('/extended/player', fn() => view('extended.player'))->name('extended.player');
-Route::get('/extended/scrollbar', fn() => view('extended.scrollbar'))->name('extended.scrollbar');
-Route::get('/extended/sweet-alert', fn() => view('extended.sweet-alert'))->name('extended.sweet-alert');
-Route::get('/extended/tour', fn() => view('extended.tour'))->name('extended.tour');
-Route::get('/extended/tippy-tooltips', fn() => view('extended.tippy-tooltips'))->name('extended.tippy-tooltips');
-Route::get('/extended/lightbox', fn() => view('extended.lightbox'))->name('extended.lightbox');
-Route::get('/forms/elements', fn() => view('forms.elements'))->name('forms.elements');
-Route::get('/forms/select', fn() => view('forms.select'))->name('forms.select');
-Route::get('/forms/range', fn() => view('forms.range'))->name('forms.range');
-Route::get('/forms/pickers', fn() => view('forms.pickers'))->name('forms.pickers');
-Route::get('/forms/masks', fn() => view('forms.masks'))->name('forms.masks');
-Route::get('/forms/editor', fn() => view('forms.editor'))->name('forms.editor');
-Route::get('/forms/file-uploads', fn() => view('forms.file-uploads'))->name('forms.file-uploads');
-Route::get('/forms/validation', fn() => view('forms.validation'))->name('forms.validation');
-Route::get('/forms/layout', fn() => view('forms.layout'))->name('forms.layout');
-Route::get('/tables/basic', fn() => view('tables.basic'))->name('tables.basic');
-Route::get('/tables/datatables', fn() => view('tables.datatables'))->name('tables.datatables');
-Route::get('/icons/mingcute', fn() => view('icons.mingcute'))->name('icons.mingcute');
-Route::get('/icons/feather', fn() => view('icons.feather'))->name('icons.feather');
-Route::get('/icons/material-symbols', fn() => view('icons.material-symbols'))->name('icons.material-symbols');
-Route::get('/maps/google', fn() => view('maps.google'))->name('maps.google');
+// Static Views
+$staticViews = [
+    'charts' => 'charts',
+    'apps/calendar' => 'apps.calender',
+    'apps/tickets' => 'apps.tickets',
+    'apps/file-manager' => 'apps.file-manager',
+    'apps/kanban' => 'apps.kanban',
+    'project/list' => 'project.list',
+    'project/detail' => 'project.detail',
+    'project/create' => 'project.create',
+    'auth/login' => 'auth.login',
+    'auth/register' => 'auth.register',
+    'auth/recoverpw' => 'auth.recoverpw',
+    'auth/lock-screen' => 'auth.lock-screen',
+    'pages/starter' => 'pages.starter',
+    'pages/timeline' => 'pages.timeline',
+    'pages/invoice' => 'pages.invoice',
+    'pages/gallery' => 'pages.gallery',
+    'pages/faqs' => 'pages.faqs',
+    'pages/pricing' => 'pages.pricing',
+    'pages/maintenance' => 'pages.maintenance',
+    'pages/coming-soon' => 'pages.coming-soon',
+    'pages/404' => 'pages.404',
+    'pages/404-alt' => 'pages.404-alt',
+    'pages/500' => 'pages.500',
+];
 
-// Your other routes
-//Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
-//    Route::get('', [RoutingController::class, 'index'])->name('root');
-//    Route::get('/home', fn() => view('index'))->name('home');
-//    Route::get('{first}/{second}/{third}', [RoutingController::class, 'thirdLevel'])->name('third');
-  // Route::get('{first}/{second}', [RoutingController::class, 'secondLevel'])->name('second');
-  // Route::get('{any}', [RoutingController::class, 'root'])->name('any');
-//});
+foreach ($staticViews as $route => $view) {
+    Route::view($route, $view)->name(str_replace('/', '.', $route));
+}
+
+// Simplified miscellaneous UI and extended features
+Route::view('/map', 'map');
+Route::view('/ui/alerts', 'ui.alerts')->name('ui.alerts');
+Route::view('/forms/elements', 'forms.elements')->name('forms.elements');
+Route::view('/tables/basic', 'tables.basic')->name('tables.basic');
+Route::view('/icons/feather', 'icons.feather')->name('icons.feather');
+Route::view('/maps/google', 'maps.google')->name('maps.google');

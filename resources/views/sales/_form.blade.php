@@ -2,15 +2,12 @@
 <div class="grid grid-cols-12 gap-x-7 maxSm:gap-x-0 form-container">
     <div class="xl:col-span-4 lg:col-span-4 md:col-span-6 col-span-12">
         <div class="cashier-select-field mb-5">
-            <h5 class="text-[15px] text-heading font-semibold mb-3">Select Vendor</h5>
-            <div class="cashier-select-field-style form-group">
-                <select class="block w-full form-input" name="vendor" required>
-                    <option selected disabled value="default">Select Vendor</option>
-                    <option value="vendor-1" {{ old('vendor', $sale->vendor ?? '') == 'vendor-1' ? 'selected' : '' }}>Vendor 1</option>
-                    <option value="vendor-2" {{ old('vendor', $sale->vendor ?? '') == 'vendor-2' ? 'selected' : '' }}>Vendor 2</option>
-                    <option value="vendor-3" {{ old('vendor', $sale->vendor ?? '') == 'vendor-3' ? 'selected' : '' }}>Vendor 3</option>
-                </select>
-            </div>
+            <h5 class="text-[15px] text-heading font-semibold mb-3">Select Supplier</h5>
+            <select class="block w-full form-input" name="supplier" id="supplier-select" required>
+                <option selected disabled value="default">Select Supplier</option>
+                <!-- Suppliers will be loaded dynamically using axios -->
+            </select>
+
         </div>
     </div>
 
@@ -61,45 +58,7 @@
                 <div class="col-span-1 text-[15px] font-semibold text-heading">Action</div>
             </div>
             <div id="productTableBody" class="divide-y divide-gray-300">
-                @if(isset($sale) && $sale->products)
-                    @foreach ($sale->products as $product)
-                        <div class="grid grid-cols-12 gap-4 py-4">
-                            <div class="col-span-1 flex items-center justify-center">
-                                <span>{{ $loop->iteration }}</span>
-                            </div>
-                            <div class="col-span-5 flex items-center justify-center">
-                                <input type="text" name="products[{{ $loop->index }}][name]" value="{{ $product->name }}" class="border border-gray-300 rounded w-full text-left" readonly>
-                            </div>
-                            <div class="col-span-1 flex items-center justify-center">
-                                <input type="text" name="products[{{ $loop->index }}][unit]" value="{{ $product->pivot->unit }}" class="unit border border-gray-300 rounded w-full text-center" readonly>
-                            </div>
-                            <div class="col-span-1 flex items-center justify-center">
-                                <input type="text" name="products[{{ $loop->index }}][unit_price]" value="{{ $product->pivot->unit_price }}" class="unit-price border border-gray-300 rounded w-full text-center" oninput="calculateTotal(this)">
-                            </div>
-                            <div class="col-span-1 flex items-center justify-center">
-                                <div class="relative">
-                                    <input type="number" name="products[{{ $loop->index }}][quantity]" value="{{ $product->pivot->quantity }}" class="q-input border border-gray-300 rounded w-20 text-center pr-8" oninput="calculateTotal(this)">
-                                    <div class="absolute inset-y-0 right-0 flex flex-col items-center justify-center h-full">
-                                        <button type="button" class="q-up p-1 bg-gray-300 rounded-t flex items-center justify-center w-8 h-1/2" onclick="incrementQty(this)">
-                                            <i class="msr">arrow_drop_up</i>
-                                        </button>
-                                        <button type="button" class="q-down p-1 bg-gray-300 rounded-b flex items-center justify-center w-8 h-1/2" onclick="decrementQty(this)">
-                                            <i class="msr">arrow_drop_down</i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-span-2 flex items-center justify-center">
-                                <input type="text" name="products[{{ $loop->index }}][sub_total]" value="{{ $product->pivot->unit_price * $product->pivot->quantity }}" class="total-price border border-gray-300 rounded w-full text-center" readonly>
-                            </div>
-                            <div class="col-span-1 flex items-center justify-center">
-                                <a href="javascript:void(0)" class="product-delete-btn flex items-center" onclick="removeRow(this)">
-                                    <i class="msr">cancel</i>
-                                </a>
-                            </div>
-                        </div>
-                    @endforeach
-                @endif
+                <!-- Products dynamically added with JavaScript and axios -->
             </div>
             <div class="mt-4 flex items-center justify-end px-4">
                 <button type="button" onclick="addRow()" class="bg-blue-500 text-white py-2 px-4 rounded-md flex items-center"><i class="msr">add</i></button>
@@ -141,133 +100,144 @@
 </div>
 @push('scripts')
     <script>
-        let rowCount = document.querySelectorAll('#productTableBody .grid').length || 0;
+        let rowCount = 0;
 
-        // Function to add a new row
+        // Load suppliers dynamically
+        function loadSuppliers() {
+            axios.get('/api/suppliers')
+                .then(response => {
+                    const supplierSelect = document.getElementById('supplier-select');
+                    supplierSelect.innerHTML = '<option selected disabled value="default">Select Supplier</option>';
+                    response.data.forEach(supplier => {
+                        const option = document.createElement('option');
+                        option.value = supplier.id;
+                        option.text = supplier.name;
+                        supplierSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching suppliers:', error);
+                    alert('Failed to load suppliers. Please try again later.');
+                });
+        }
+
+        // Add a new row
         function addRow() {
             rowCount++;
             const tableBody = document.getElementById('productTableBody');
             const newRow = document.createElement('div');
             newRow.classList.add('grid', 'grid-cols-12', 'gap-4', 'py-4');
+            newRow.dataset.rowId = rowCount; // Add unique identifier for each row
 
             newRow.innerHTML = `
-                <div class="col-span-1 flex items-center justify-center">
-                    <span>${rowCount}</span>
-                </div>
-                <div class="col-span-5 flex items-center justify-center">
-                    <input type="text" placeholder="Scan / search products by code / name" class="border border-gray-300 rounded w-full text-left">
-                </div>
-                <div class="col-span-1 flex items-center justify-center">
-                    <input type="text" class="unit border border-gray-300 rounded w-full text-center">
-                </div>
-                <div class="col-span-1 flex items-center justify-center">
-                    <input type="text" class="unit-price border border-gray-300 rounded w-full text-center" oninput="calculateTotal(this)">
-                </div>
-                <div class="col-span-1 flex items-center justify-center">
-                    <div class="relative">
-                        <input type="number" class="q-input border border-gray-300 rounded w-20 text-center pr-8" value="1" oninput="calculateTotal(this)">
-                        <div class="absolute inset-y-0 right-0 flex flex-col items-center justify-center h-full">
-                            <button type="button" class="q-up p-1 bg-gray-300 rounded-t flex items-center justify-center w-8 h-1/2" onclick="incrementQty(this)">
-                                <i class="msr">arrow_drop_up</i>
-                            </button>
-                            <button type="button" class="q-down p-1 bg-gray-300 rounded-b flex items-center justify-center w-8 h-1/2" onclick="decrementQty(this)">
-                                <i class="msr">arrow_drop_down</i>
-                            </button>
-                        </div>
+            <div class="col-span-1 flex items-center justify-center">
+                <span>${rowCount}</span>
+            </div>
+            <div class="col-span-5 flex items-center justify-center">
+                <input type="text" placeholder="Scan / search products by code / name" class="border border-gray-300 rounded w-full text-left product-search" oninput="searchProducts(this)">
+            </div>
+            <div class="col-span-1 flex items-center justify-center">
+                <input type="text" class="unit border border-gray-300 rounded w-full text-center" readonly>
+            </div>
+            <div class="col-span-1 flex items-center justify-center">
+                <input type="number" class="unit-price border border-gray-300 rounded w-full text-center" oninput="calculateTotal(this)" min="0" step="0.01">
+            </div>
+            <div class="col-span-1 flex items-center justify-center">
+                <div class="relative">
+                    <input type="number" class="q-input border border-gray-300 rounded w-20 text-center pr-8" value="1" min="1" oninput="calculateTotal(this)">
+                    <div class="absolute inset-y-0 right-0 flex flex-col items-center justify-center h-full">
+                        <button type="button" class="q-up p-1 bg-gray-300 rounded-t flex items-center justify-center w-8 h-1/2" onclick="incrementQty(this)">
+                            <i class="msr">arrow_drop_up</i>
+                        </button>
+                        <button type="button" class="q-down p-1 bg-gray-300 rounded-b flex items-center justify-center w-8 h-1/2" onclick="decrementQty(this)">
+                            <i class="msr">arrow_drop_down</i>
+                        </button>
                     </div>
                 </div>
-                <div class="col-span-2 flex items-center justify-center">
-                    <input type="text" class="total-price border border-gray-300 rounded w-full text-center" readonly>
-                </div>
-                <div class="col-span-1 flex items-center justify-center">
-                    <a href="javascript:void(0)" class="product-delete-btn flex items-center" onclick="removeRow(this)">
-                        <i class="msr">cancel</i>
-                    </a>
-                </div>
-            `;
-
+            </div>
+            <div class="col-span-2 flex items-center justify-center">
+                <input type="text" class="total-price border border-gray-300 rounded w-full text-center" readonly>
+            </div>
+            <div class="col-span-1 flex items-center justify-center">
+                <a href="javascript:void(0)" class="product-delete-btn flex items-center" onclick="removeRow(this)">
+                    <i class="msr">cancel</i>
+                </a>
+            </div>
+        `;
             tableBody.appendChild(newRow);
-
-            // Attach event listeners to new row inputs for real-time calculation
-            newRow.querySelectorAll('.unit-price, .q-input').forEach(input => {
-                input.addEventListener('input', () => calculateTotal(input));
-            });
-
-            // Recalculate totals for new rows
-            calculateGrandTotal();
         }
 
-        // Function to remove a row
-        function removeRow(element) {
-            const row = element.closest('.grid');
-            row.remove();
-            calculateGrandTotal();
+        // Search products dynamically
+        function searchProducts(inputElement) {
+            const query = inputElement.value;
+            if (query.length > 2) {
+                axios.get(`/api/products?query=${query}`)
+                    .then(response => {
+                        if (response.data.length > 0) {
+                            const product = response.data[0]; // Select the first result
+                            const row = inputElement.closest('.grid');
+                            row.querySelector('.unit').value = product.unit;
+                            row.querySelector('.unit-price').value = product.unit_price;
+                            calculateTotal(row.querySelector('.unit-price'));
+                        } else {
+                            alert('No products found for the search query.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching products:', error);
+                        alert('Failed to fetch products. Please try again.');
+                    });
+            }
         }
 
-        // Function to increment quantity
-        function incrementQty(element) {
-            const input = element.closest('.relative').querySelector('.q-input');
+        // Increment quantity
+        function incrementQty(button) {
+            const input = button.closest('.relative').querySelector('.q-input');
             input.value = parseInt(input.value) + 1;
             calculateTotal(input);
         }
 
-        // Function to decrement quantity
-        function decrementQty(element) {
-            const input = element.closest('.relative').querySelector('.q-input');
-            input.value = Math.max(1, parseInt(input.value) - 1);
-            calculateTotal(input);
+        // Decrement quantity
+        function decrementQty(button) {
+            const input = button.closest('.relative').querySelector('.q-input');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+                calculateTotal(input);
+            }
         }
 
-        // Function to calculate the total price for a row
-        function calculateTotal(element) {
-            const row = element.closest('.grid');
+        // Calculate total for a single row
+        function calculateTotal(inputElement) {
+            const row = inputElement.closest('.grid');
             const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
             const quantity = parseInt(row.querySelector('.q-input').value) || 0;
+            const totalPrice = (unitPrice * quantity).toFixed(2);
+            row.querySelector('.total-price').value = totalPrice;
 
-            const subtotal = unitPrice * quantity;
-
-            row.querySelector('.total-price').value = subtotal.toFixed(2);
             calculateGrandTotal();
         }
 
-        // Function to calculate the grand total for all rows
+        // Calculate grand total
         function calculateGrandTotal() {
-            let totalAmount = 0;
-            document.querySelectorAll('#productTableBody .grid').forEach(row => {
-                const unitPrice = parseFloat(row.querySelector('.unit-price').value) || 0;
-                const quantity = parseInt(row.querySelector('.q-input').value) || 0;
-
-                totalAmount += unitPrice * quantity;
+            let grandTotal = 0;
+            document.querySelectorAll('.total-price').forEach(input => {
+                grandTotal += parseFloat(input.value) || 0;
             });
-
-            // Get the discount percentage and calculate the discount amount
-            const discountPercentageElem = document.getElementById('discountPercentage');
-            const shippingCostElem = document.getElementById('shippingCost');
-            const totalAmountElem = document.getElementById('totalAmount');
-            const grandTotalElem = document.getElementById('grandTotal');
-
-            if (discountPercentageElem && shippingCostElem && totalAmountElem && grandTotalElem) {
-                const discountPercentage = parseFloat(discountPercentageElem.value) || 0;
-                const totalDiscount = totalAmount * (discountPercentage / 100);
-
-                // Get the shipping cost and add it to the grand total
-                const shippingCost = parseFloat(shippingCostElem.value) || 0;
-                const grandTotal = totalAmount - totalDiscount + shippingCost;
-
-                totalAmountElem.innerText = `Rs${totalAmount.toFixed(2)}`;
-                grandTotalElem.innerText = `Rs${grandTotal.toFixed(2)}`;
-            }
+            document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Add initial row
-            if (rowCount === 0) {
-                addRow();
-            }
+        // Remove a row
+        function removeRow(button) {
+            const row = button.closest('.grid');
+            row.remove();
+            calculateGrandTotal();
+        }
 
-            // Attach event listeners to the shipping cost and discount percentage input fields
-            document.getElementById('shippingCost').addEventListener('input', calculateGrandTotal);
-            document.getElementById('discountPercentage').addEventListener('input', calculateGrandTotal);
+        // Initialize the form
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSuppliers(); // Load suppliers dynamically when the form loads
+            addRow(); // Add the first row when the form loads
         });
     </script>
 @endpush
+
