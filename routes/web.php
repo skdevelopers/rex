@@ -119,3 +119,6 @@ Route::view('/maps/google', 'maps.google')->name('maps.google');
 Route::get('/layouts-eg/hover-view', function () {
     return view('layouts-eg.hover-view');
 })->name('layouts-eg.hover-view');
+Route::view('/layouts-eg/icon-view', 'layouts-eg.icon-view')->name('layouts-eg.icon-view');
+Route::view('/layouts-eg/compact-view', 'layouts-eg.compact-view')->name('layouts-eg.compact-view');
+Route::view('/layouts-eg/mobile-view', 'layouts-eg.mobile-view')->name('layouts-eg.mobile-view');
