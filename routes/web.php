@@ -126,3 +126,6 @@ Route::view('/layouts-eg/hidden-view', 'layouts-eg.hidden-view')->name('layouts-
 Route::view('/ui/accordions', 'ui.accordions')->name('ui.accordions');
 Route::view('/ui/alerts', 'ui.alerts')->name('ui.alerts');
 Route::view('/ui/avatars', 'ui.avatars')->name('ui.avatars');
+Route::view('/ui/buttons', 'ui.buttons')->name('ui.buttons');
+Route::view('/ui/badges', 'ui.badges')->name('ui.badges');
+Route::view('/ui/breadcrumbs', 'ui.breadcrumbs')->name('ui.breadcrumbs');
