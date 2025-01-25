@@ -132,3 +132,6 @@ Route::view('/ui/breadcrumbs', 'ui.breadcrumbs')->name('ui.breadcrumbs');
 Route::view('/ui/cards', 'ui.cards')->name('ui.cards');
 Route::view('/ui/collapse', 'ui.collapse')->name('ui.collapse');
 Route::view('/ui/dismissible', 'ui.dismissible')->name('ui.dismissible');
+Route::view('/ui/dropdowns', 'ui.dropdowns')->name('ui.dropdowns');
+Route::view('/ui/progress', 'ui.progress')->name('ui.progress');
+Route::view('/ui/skeleton', 'ui.skeleton')->name('ui.skeleton');
