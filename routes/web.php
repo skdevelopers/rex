@@ -135,3 +135,44 @@ Route::view('/ui/dismissible', 'ui.dismissible')->name('ui.dismissible');
 Route::view('/ui/dropdowns', 'ui.dropdowns')->name('ui.dropdowns');
 Route::view('/ui/progress', 'ui.progress')->name('ui.progress');
 Route::view('/ui/skeleton', 'ui.skeleton')->name('ui.skeleton');
+Route::view('/ui/spinners', 'ui.spinners')->name('ui.spinners');
+Route::view('/ui/list-group', 'ui.list-group')->name('ui.list-group');
+Route::view('/ui/ratio', 'ui.ratio')->name('ui.ratio');
+Route::view('/ui/tabs', 'ui.tabs')->name('ui.tabs');
+Route::view('/ui/modals', 'ui.modals')->name('ui.modals');
+Route::view('/ui/offcanvas', 'ui.offcanvas')->name('ui.offcanvas');
+Route::view('/ui/popovers', 'ui.popovers')->name('ui.popovers');
+Route::view('/ui/tooltips', 'ui.tooltips')->name('ui.tooltips');
+Route::view('/ui/typography', 'ui.typography')->name('ui.typography');
+
+Route::view('/extended/swiper', 'extended.swiper')->name('extended.swiper');
+Route::view('/extended/nestable', 'extended.nestable')->name('extended.nestable');
+Route::view('/extended/ratings', 'extended.ratings')->name('extended.ratings');
+Route::view('/extended/animation', 'extended.animation')->name('extended.animation');
+Route::view('/extended/player', 'extended.player')->name('extended.player');
+Route::view('/extended/scrollbar', 'extended.scrollbar')->name('extended.scrollbar');
+Route::view('/extended/sweet-alert', 'extended.sweet-alert')->name('extended.sweet-alert');
+Route::view('/extended/tour', 'extended.tour')->name('extended.tour');
+Route::view('/extended/tippy-tooltips', 'extended.tippy-tooltips')->name('extended.tippy-tooltips');
+Route::view('/extended/lightbox', 'extended.lightbox')->name('extended.lightbox');
+
+Route::view('/forms/elements', 'forms.elements')->name('forms.elements');
+Route::view('/forms/select', 'forms.select')->name('forms.select');
+Route::view('/forms/range', 'forms.range')->name('forms.range');
+Route::view('/forms/pickers', 'forms.pickers')->name('forms.pickers');
+Route::view('/forms/masks', 'forms.masks')->name('forms.masks');
+Route::view('/forms/editor', 'forms.editor')->name('forms.editor');
+Route::view('/forms/file-uploads', 'forms.file-uploads')->name('forms.file-uploads');
+Route::view('/forms/validation', 'forms.validation')->name('forms.validation');
+Route::view('/forms/layout', 'forms.layout')->name('forms.layout');
+
+Route::view('/tables/basic', 'tables.basic')->name('tables.basic');
+Route::view('/tables/datatables', 'tables/datatables')->name('tables.datatables');
+
+Route::view('/icons/mingcute', 'icons.mingcute')->name('icons.mingcute');
+Route::view('/icons/feather', 'icons.feather')->name('icons.feather');
+Route::view('/icons/material-symbols', 'icons.material-symbols')->name('icons.material-symbols');
+
+Route::view('/charts', 'charts.index')->name('charts');
+
+Route::view('/maps/google', 'maps.google')->name('maps.google');
