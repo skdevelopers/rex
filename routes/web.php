@@ -129,3 +129,6 @@ Route::view('/ui/avatars', 'ui.avatars')->name('ui.avatars');
 Route::view('/ui/buttons', 'ui.buttons')->name('ui.buttons');
 Route::view('/ui/badges', 'ui.badges')->name('ui.badges');
 Route::view('/ui/breadcrumbs', 'ui.breadcrumbs')->name('ui.breadcrumbs');
+Route::view('/ui/cards', 'ui.cards')->name('ui.cards');
+Route::view('/ui/collapse', 'ui.collapse')->name('ui.collapse');
+Route::view('/ui/dismissible', 'ui.dismissible')->name('ui.dismissible');
