@@ -17,6 +17,8 @@ return new class extends Migration
 
         // Drop the parent tables
         Schema::dropIfExists('roles');
+        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('users'); // Ensure this table is handled if relevant
         Schema::dropIfExists('table1');
     }
 
@@ -29,6 +31,22 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->timestamps();
+        });
+
+        // Recreate the 'permissions' table
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        // Recreate the 'users' table if it was dropped
+        Schema::create('users', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
             $table->timestamps();
         });
 
