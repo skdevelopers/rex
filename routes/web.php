@@ -116,3 +116,6 @@ Route::view('/forms/elements', 'forms.elements')->name('forms.elements');
 Route::view('/tables/basic', 'tables.basic')->name('tables.basic');
 Route::view('/icons/feather', 'icons.feather')->name('icons.feather');
 Route::view('/maps/google', 'maps.google')->name('maps.google');
+Route::get('/layouts-eg/hover-view', function () {
+    return view('layouts-eg.hover-view');
+})->name('layouts-eg.hover-view');
