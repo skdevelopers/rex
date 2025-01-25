@@ -11,16 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
-        Schema::dropIfExists('table1');
-
-        // Drop the second table
-        Schema::dropIfExists('roles');
-
+        // Drop child tables first to avoid foreign key constraint issues
         Schema::dropIfExists('permission_role');
-
-        // Drop the third table
         Schema::dropIfExists('role_user');
+
+        // Drop the parent tables
+        Schema::dropIfExists('roles');
+        Schema::dropIfExists('table1');
     }
 
     /**
@@ -28,12 +25,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
-        Schema::table('roles', function (Blueprint $table) {
-            $table->unsignedBigInteger('permission_id')->nullable()->after('id');
-            $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
+        // Recreate the 'roles' table
+        Schema::create('roles', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->timestamps();
         });
 
+        // Recreate the 'permission_role' table
         Schema::create('permission_role', function (Blueprint $table) {
             $table->unsignedBigInteger('permission_id');
             $table->unsignedBigInteger('role_id');
@@ -45,12 +44,9 @@ return new class extends Migration
 
             // Define primary key
             $table->primary(['permission_id', 'role_id']);
-
-            // Add indexes for performance optimization
-            $table->index('permission_id');
-            $table->index('role_id');
         });
 
+        // Recreate the 'role_user' table
         Schema::create('role_user', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
@@ -58,8 +54,9 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('role_id')->references('id')->on('roles');
+            // Define foreign key constraints
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
         });
     }
 };
