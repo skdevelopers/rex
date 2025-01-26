@@ -76,9 +76,7 @@ Route::prefix('api')->group(function () {
     Route::get('suppliers', [SupplierController::class, 'indexJson'])->name('api.suppliers.index');
     Route::get('cash-flows', [CashFlowController::class, 'indexJson'])->name('api.cash-flows.index');
     Route::get('products', [ProductController::class, 'indexJson'])->name('api.products.index');
-});
-
-// Static Views
+});// Static Views
 $staticViews = [
     'charts' => 'charts',
     'apps/calendar' => 'apps.calender',

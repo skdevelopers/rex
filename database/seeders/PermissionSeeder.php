@@ -51,114 +51,115 @@ class PermissionSeeder extends Seeder
             Permission::create($permissionData);
         }
 
-        // Define roles and their permissions
+        // Define roles and their permissions with guard name
         $roles = [
             'Owner' => [
-                'manage_users', // Allows creating, editing, and deleting user accounts
-                'reset_user_passwords', // Allows resetting user passwords
-                'view_user_logs', // Allows viewing user activity logs
-
-                'manage_roles', // Allows creating, editing, and deleting roles
-                'assign_permissions', // Allows assigning permissions to roles
-
-                'manage_settings', // Allows configuring system settings and preferences
-                'define_access_controls', // Allows defining access controls
-
-                'view_financial_reports', // Allows accessing financial reports and transaction history
-                'manage_financial_transactions', // Allows managing financial transactions
-
-                'manage_inventory', // Allows managing inventory
-                'track_stock_movements', // Allows tracking stock movements
-
-                'manage_sales_orders', // Allows managing sales orders
-                'manage_customers', // Allows managing customers
-
-                'manage_purchase_orders', // Allows managing purchase orders
-                'manage_vendors', // Allows managing vendors
-
-                'manage_employees', // Allows managing employees
-                'process_payroll', // Allows processing payroll
-
-                'manage_projects', // Allows managing projects
-                'assign_tasks', // Allows assigning tasks
-
-                'access_reports', // Allows accessing reports
-                'customize_reports', // Allows customizing reports
-
-                'import_data', // Allows importing data
-                'export_data', // Allows exporting data
-
-                'perform_system_backup', // Allows performing system backups
-                'monitor_system_health', // Allows monitoring system health
-
-                'maintain_audit_trail', // Allows maintaining audit trails
-                'manage_security', // Allows managing security
-                'manage_admins', // Ability to manage other admins
-                'configure_system_settings', // Ability to configure advanced system settings
-                'approve_financial_transactions', // Ability to approve financial transactions
-                'override_inventory_controls', // Ability to override inventory controls
-                'view_sensitive_data', // Access to sensitive data beyond financial reports
-                // Add any other special permissions specific to the owner role
+                'guard_name' => 'web', // Define the guard for this role
+                'permissions' => [
+                    'manage_users',
+                    'reset_user_passwords',
+                    'view_user_logs',
+                    'manage_roles',
+                    'assign_permissions',
+                    'manage_settings',
+                    'define_access_controls',
+                    'view_financial_reports',
+                    'manage_financial_transactions',
+                    'manage_inventory',
+                    'track_stock_movements',
+                    'manage_sales_orders',
+                    'manage_customers',
+                    'manage_purchase_orders',
+                    'manage_vendors',
+                    'manage_employees',
+                    'process_payroll',
+                    'manage_projects',
+                    'assign_tasks',
+                    'access_reports',
+                    'customize_reports',
+                    'import_data',
+                    'export_data',
+                    'perform_system_backup',
+                    'monitor_system_health',
+                    'maintain_audit_trail',
+                    'manage_security',
+                    'manage_admins',
+                    'configure_system_settings',
+                    'approve_financial_transactions',
+                    'override_inventory_controls',
+                    'view_sensitive_data',
+                ],
             ],
             'Admin' => [
-                'manage_users',
-                'reset_user_passwords',
-                'view_user_logs',
-                'manage_roles',
-                'assign_permissions',
-                'manage_settings',
-                'define_access_controls',
-                'view_financial_reports',
-                'manage_financial_transactions',
-                'track_stock_movements',
-                'manage_sales_orders',
-                'manage_customers',
-                'manage_purchase_orders',
-                'manage_vendors',
-                'manage_employees',
-                'process_payroll',
-                'manage_projects',
-                'assign_tasks',
-                'access_reports',
-                'customize_reports',
-                'import_data',
-                'export_data',
-                'perform_system_backup',
-                'monitor_system_health',
-                'maintain_audit_trail',
-                'manage_security',
+                'guard_name' => 'web', // Define the guard for this role
+                'permissions' => [
+                    'manage_users',
+                    'reset_user_passwords',
+                    'view_user_logs',
+                    'manage_roles',
+                    'assign_permissions',
+                    'manage_settings',
+                    'define_access_controls',
+                    'view_financial_reports',
+                    'manage_financial_transactions',
+                    'track_stock_movements',
+                    'manage_sales_orders',
+                    'manage_customers',
+                    'manage_purchase_orders',
+                    'manage_vendors',
+                    'manage_employees',
+                    'process_payroll',
+                    'manage_projects',
+                    'assign_tasks',
+                    'access_reports',
+                    'customize_reports',
+                    'import_data',
+                    'export_data',
+                    'perform_system_backup',
+                    'monitor_system_health',
+                    'maintain_audit_trail',
+                    'manage_security',
+                ],
             ],
             'Manager' => [
-                'view_financial_reports',
-                'manage_financial_transactions',
-                'track_stock_movements',
-                'manage_sales_orders',
-                'manage_purchase_orders',
-                'manage_projects',
-                'assign_tasks',
-                'access_reports',
-                'import_data',
-                'export_data',
-                'monitor_system_health',
-                'maintain_audit_trail',
+                'guard_name' => 'web', // Define the guard for this role
+                'permissions' => [
+                    'view_financial_reports',
+                    'manage_financial_transactions',
+                    'track_stock_movements',
+                    'manage_sales_orders',
+                    'manage_purchase_orders',
+                    'manage_projects',
+                    'assign_tasks',
+                    'access_reports',
+                    'import_data',
+                    'export_data',
+                    'monitor_system_health',
+                    'maintain_audit_trail',
+                ],
             ],
-
             'Employee' => [
-                'track_stock_movements',
-                'manage_sales_orders',
-                'manage_purchase_orders',
-                'manage_projects',
-                'assign_tasks',
-                'access_reports',
+                'guard_name' => 'web', // Define the guard for this role
+                'permissions' => [
+                    'track_stock_movements',
+                    'manage_sales_orders',
+                    'manage_purchase_orders',
+                    'manage_projects',
+                    'assign_tasks',
+                    'access_reports',
+                ],
             ],
         ];
 
         // Assign permissions to roles
-        foreach ($roles as $roleName => $rolePermissions) {
+        foreach ($roles as $roleName => $roleData) {
             $role = Role::where('name', $roleName)->first();
 
             if ($role) {
-                $role->permissions()->sync(Permission::whereIn('name', $rolePermissions)->pluck('id'));
+                $role->guard_name = $roleData['guard_name'];
+                $role->save();
+
+                $role->permissions()->sync(Permission::whereIn('name', $roleData['permissions'])->pluck('id'));
             }
         }
     }
