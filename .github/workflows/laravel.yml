@@ -17,7 +17,7 @@ jobs:
       uses: skdevelopers/set-php@v1.0.2
       with:
         php-version: '8.3'
-        extensions: mbstring, xml, ctype, json, tokenizer, bcmath, curl, fileinfo, openssl, pdo_sqlite, sqlite3, pdo, zip
+        extensions: mbstring, xml, ctype, tokenizer, bcmath, curl, fileinfo, openssl, pdo_sqlite, sqlite3, pdo, zip
         ini-values: |
           memory_limit=2G
           post_max_size=100M
