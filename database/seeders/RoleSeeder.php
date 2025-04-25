@@ -2,30 +2,34 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Schema;
 
 class RoleSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeds for roles.
      */
     public function run()
     {
         // Define roles
         $roles = [
-            ['name' => 'Owner'],
-            ['name' => 'Admin'],
-            ['name' => 'Manager'],
-            ['name' => 'Employee'],
-            // Add more roles as needed
+            ['name' => 'Owner', 'guard_name' => 'web'],
+            ['name' => 'Admin', 'guard_name' => 'web'],
+            ['name' => 'Manager', 'guard_name' => 'web'],
+            ['name' => 'Employee', 'guard_name' => 'web'],
         ];
 
-        // Insert roles into database
-        foreach ($roles as $roleData) {
-            Role::create($roleData);
-        }
+        DB::transaction(function () use ($roles) {
+            foreach ($roles as $roleData) {
+                Role::updateOrCreate(
+                    ['name' => $roleData['name'], 'guard_name' => $roleData['guard_name']]
+                );
+            }
+        });
     }
 }
