@@ -24,6 +24,11 @@ jobs:
             post_max_size=100M
             upload_max_filesize=100M
 
+      - name: Install Required PHP Extensions
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php8.3-sqlite3 php8.3-mbstring php8.3-xml php8.3-ctype php8.3-tokenizer php8.3-bcmath php8.3-curl php8.3-fileinfo php8.3-pdo php8.3-zip
+
       - name: Cache Composer Dependencies
         uses: actions/cache@v4
         with:
